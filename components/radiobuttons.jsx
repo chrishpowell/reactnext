@@ -7,13 +7,11 @@
 //import 'normalize.css';
 // Emotion
 //import { ThemeProvider } from "emotion-theming";
-//import styled from "react-emotion";
 import css from "styled-jsx/css";
 // Predikt font
 // import "typeface-open-sans";
 // Formik
-import { Formik, Form, FieldArray } from 'formik';
-
+import { FieldArray } from "formik";
 
 // Array of radio buttons
 const accountTypes = [
@@ -47,70 +45,51 @@ const accountTypes = [
 const accountTypeChkdId = accountTypes[0].id;
 
 const RadioButtons = () => (
-  <div>
-    <Formik
-      initialValues={{ accountTypeId: accountTypeChkdId }}
-      onSubmit={(values, actions) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          actions.setSubmitting(false);
-        }, 400);
-      }}
-      render={({ values }) => (
-        <Form>
-          <FieldArray
-            name="accountTypeId"
-            render={arrayHelpers => (
-              <>
-                {accountTypes.map(accountType => (
-                  <section className="radiobutton" key={accountType.id}>
-                    <input
-                      type="radio"
-                      name="accountType"
-                      className="input"
-                      id={accountType.id}
-                      defaultChecked={accountType.id == accountTypeChkdId}
-                      onChange={e => {
-                        e.target.checked
-                          ? (values.accountTypeId = accountType.id)
-                          : null;
-                      }}
-                    />
-                    &nbsp;
-                    <label className="label" htmlFor={accountType.id}>
-                      {accountType.desc} {accountType.price}
-                    </label>
-                  </section>
-                ))}
-              </>
-            )}
-          />
-          <button className="button" type="submit">Submit</button>
-        </Form>
-      )}
-    />
+  <>
+    <div>
+      <FieldArray
+        name="accountTypeId"
+        render={arrayHelpers => (
+          <>
+            {accountTypes.map(accountType => (
+              <section className="radiobutton" key={accountType.id}>
+                <input
+                  type="radio"
+                  name="accountType"
+                  className="input"
+                  id={accountType.id}
+                  defaultChecked={accountType.id == accountTypeChkdId}
+                  onChange={e => {
+                    e.target.checked
+                      ? (accountTypes.accountTypeId = accountType.id)
+                      : null;
+                  }}
+                />
+                &nbsp;
+                <label className="label" htmlFor={accountType.id}>
+                  {accountType.desc} {accountType.price}
+                </label>
+              </section>
+            ))}
+          </>
+        )}
+      />
+    </div>
 
     <style jsx="true">{`
       .radiobutton {
-          height: 25px, width: 75%;
-          border: 1px solid black;
-          display: flex;
-          align-items: center;
-          margin-bottom: 3px
-      }
-      .button {
         height: 25px;
-        width: 75%
+        width: 75%;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 3px;
       }
       .label {
-        width: 90%
-      }
-      .input {
-        height: 14px;
-        background-color: #E6E6FA
+        width: 90%;
       }
     `}</style>
-  </div>
+  </>
 );
 
 export default RadioButtons;
