@@ -5,45 +5,45 @@
 // *** Globally imported by webpack: react, render(react-dom), Formik, (TBD: react-emotion, normalize.css, typeface-open-sans)
 // CSS 'reset'
 //import 'normalize.css';
-// Emotion
-//import { ThemeProvider } from "emotion-theming";
 import css from "styled-jsx/css";
 // Predikt font
 // import "typeface-open-sans";
 // Formik
 import { FieldArray } from "formik";
 
-// Array of radio buttons
-const accountTypes = [
+// Account Types (Radio Buttons) (*I18N* loaded)
+const accountTypeLocale = { currency: "€", perMonth: "per month" };
+const accountTypeList = [
   {
     id: "individual",
     desc: "Individual [1 user, secure Home Page]",
-    price: "€3.99 per month"
+    price: 3.99
   },
   {
     id: "family",
     desc: "Family [2 to 5 users, secure Home Page]",
-    price: "€7.99 per month"
+    price: 7.99
   },
   {
     id: "team",
     desc: "Group [6 to 22 users, secure Home Page]",
-    price: "€23.99 per month"
+    price: 23.99
   },
   {
     id: "smallbus",
     desc: "Small business [Global home page, no charting]",
-    price: "€29.99 per month"
+    price: 29.99
   },
   {
     id: "corporate",
     desc: "Corporate [Global home page and marketing, no charting]",
-    price: "€99.99 per month"
+    price: 99.99
   }
 ];
 // Determine default radio button
-const accountTypeChkdId = accountTypes[0].id;
+const accountTypeChkdId = accountTypeList[0].id;
 
+//... Main class
 const RadioButtons = () => (
   <>
     <div>
@@ -51,7 +51,7 @@ const RadioButtons = () => (
         name="accountTypeId"
         render={arrayHelpers => (
           <>
-            {accountTypes.map(accountType => (
+            {accountTypeList.map(accountType => (
               <section className="radiobutton" key={accountType.id}>
                 <input
                   type="radio"
@@ -61,13 +61,17 @@ const RadioButtons = () => (
                   defaultChecked={accountType.id == accountTypeChkdId}
                   onChange={e => {
                     e.target.checked
-                      ? (accountTypes.accountTypeId = accountType.id)
+                      ? (accountTypeList.accountTypeId = accountType.id)
                       : null;
                   }}
                 />
                 &nbsp;
                 <label className="label" htmlFor={accountType.id}>
-                  {accountType.desc} {accountType.price}
+                  {accountType.desc}{" "}
+                  {accountTypeLocale.currency +
+                    accountType.price +
+                    " " +
+                    accountTypeLocale.perMonth}
                 </label>
               </section>
             ))}

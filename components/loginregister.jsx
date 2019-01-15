@@ -11,17 +11,14 @@ import Modal from "react-modal";
 // Dropdown
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
-// Datetime picked
-import DateTimePicker from "./datetimepicker";
+// Datetime (DoB)
+import DatetimeComp from "../components/datetime";
 // Radio buttons
 import RadioButtons from "./radiobuttons";
 // Styles
 import styles, { button, body } from "../styles/global1";
-// Avatar
-// import...?
 // Formik
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 // Modal styles
 // Replace: fontFamily: ["Open Sans", "Roboto", "Arial"].join(",")
@@ -33,7 +30,7 @@ const customStyles = {
   }
 };
 
-// Languages
+// Languages (*I18N* loaded)
 const languageTags = [
   "en-GB [British English]",
   "en-US [American English]",
@@ -48,53 +45,40 @@ const languageTags = [
 // Default language
 const defaultOption = languageTags[0];
 
-// Account Types (Radio Buttons)
-const accountTypes = [
-  {
-    id: "individual",
-    desc: "Individual [1 user, secure Home Page]",
-    price: "€3.99 per month"
-  },
-  {
-    id: "family",
-    desc: "Family [2 to 5 users, secure Home Page]",
-    price: "€7.99 per month"
-  },
-  {
-    id: "team",
-    desc: "Group [6 to 22 users, secure Home Page]",
-    price: "€23.99 per month"
-  },
-  {
-    id: "smallbus",
-    desc: "Small business [Global home page, no charting]",
-    price: "€29.99 per month"
-  },
-  {
-    id: "corporate",
-    desc: "Corporate [Global home page and marketing, no charting]",
-    price: "€99.99 per month"
-  }
-];
-// Determine default radio button
-const accountTypeId = accountTypes[0].id;
-
-// Form(ik) fields initial values
+// Form(ik) fields initial values (*I18N* loaded)
 const formValues = {
+  mainTitle: "Registration",
+  confMsg:
+    "On successfully registering, you will receive an email with a link which you select for confirmation",
+  closeButton: "Close... didn't want this page!",
+  acctDetails: "Account details",
+  acctTypes: "Account types",
   firstname: "First name...",
   lastname: "Last name...",
-  email: "",
+  email: "Email...",
   password: "",
   password2: "",
-  dob: "",
-  lob: "",
-  locn: "",
-  lang: "en-US"
+  dob: "Date of Birth...",
+  lob: "Location of Birth...",
+  locn: "Current location...",
+  prefLangChoose: "Your preferred language",
+  famGrpTypesMsg:
+    "[Note that Family and Group types require a Group manager to manage members of the group]",
+  registerButton: "Register",
+  userPrefLang: "en-US"
+};
+
+// Error messages (*I18N* loaded)
+const errorMsgs = {
+  userReqd: "Username is required",
+  userNameInvalid: "Not a recognised name string",
+  emailReqd: "Email is required",
+  emailInvalid: "Invalid email address"
 };
 
 const fieldStyle = {
   width: "300px"
-}
+};
 
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement("#registration");
@@ -111,29 +95,12 @@ const onChangeAcctType = value => {
 const validateUsernames = name => {
   let error;
   if (!name) {
-    error = "Required";
+    error = errorMsgs.userReqd;
   } else if (!/^[^\\\./:\*\?\""<>\|]{1}[^\\/:\*\?\""<>\|]{0,50}$/i.test(name)) {
-    error = "Not a recognised name string";
+    error = errorMsgs.userNameInvalid;
   }
   return error;
 };
-
-//... Classes
-class Datetime extends React.Component {
-  render() {
-    return (
-      <section className="dt">
-        <Field
-          className="afield"
-          type="input"
-          name="datetime"
-          id="datetime"
-          placeholder="Datetime..."
-        />
-      </section>
-    );
-  }
-}
 
 //... Main Component
 class RegistrationApp extends React.Component {
@@ -168,28 +135,25 @@ class RegistrationApp extends React.Component {
           style={customStyles}
           contentLabel="Minimal Modal Example"
         >
-          <h2>Registration</h2>
-          <p>
-            On successfully registering, you will receive an email with a link
-            which you select for confirmation.
-          </p>
+          <h2>{formValues.mainTitle}</h2>
+          <p>{formValues.confMsg}</p>
           <section className="stdinp">
             <button className="closeregardless" onClick={this.handleCloseModal}>
-              Close, didn't want this page!
+              {formValues.closeButton}
             </button>
           </section>
           <Formik
             initialValues={formValues}
             validate={values => {
-              let errors = {};
+              let error = {};
               if (!values.email) {
-                errors.email = "Required";
+                error.email = errorMsgs.emailReqd;
               } else if (
                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
               ) {
-                errors.email = "Invalid email address";
+                error.email = errorMsgs.emailInvalid;
               }
-              return errors;
+              return error;
             }}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
@@ -200,103 +164,111 @@ class RegistrationApp extends React.Component {
           >
             {({ values, isSubmitting }) => (
               <Form>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="input"
-                    name="firstname"
-                    placeholder={values.firstname}
-                    validate={validateUsernames}
-                  />
-                </section>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="input"
-                    name="lastname"
-                    placeholder="Last name"
-                    validate={validateUsernames}
-                  />
-                </section>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="email"
-                    name="email"
-                    placeholder="Email..."
-                  />
-                  <ErrorMessage name="email" component="div" />
-                </section>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                  />
-                  <ErrorMessage name="password" component="div" />
-                </section>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="password"
-                    name="password2"
-                    placeholder="Password Verify"
-                  />
-                  <ErrorMessage name="password" component="div" />
-                </section>
-                <section>
-                Date of Birth
-                </section>
-                <section className="stdinp">
-                  <Datetime className="dt" dateFormat="YYYY-MM-DD" />
-                </section>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="input"
-                    name="birthLocation"
-                    placeholder="Location of Birth"
-                  />
-                </section>
-                <section className="stdinp">
-                  <Field
-                    style={fieldStyle}
-                    type="input"
-                    name="currLocation"
-                    placeholder="Current Location"
-                  />
-                </section>
-                <section>
-                Your preferred language
-                </section>
-                <section className="stdinp">
-                  <Dropdown
-                    className="adropdown"
-                    options={languageTags}
-                    onChange={onChangeLang}
-                    value={defaultOption}
-                    placeholder="Choose a preferred language"
-                  />
-                </section>
-                <section>
-                The Account type. Note that Family and Group types require a
-                Group manager to manage members of the group.
-                </section>
-                <section>
-                  <h3>Choose an account type</h3>
-                  <RadioButtons />
-                </section>
-                <section>
-                An avatar upload
-                </section>
+                <table>
+                  <tr>
+                    <th>
+                      <h3>{values.acctDetails}</h3>
+                    </th>
+                    <th>
+                      <h3>{values.acctTypes}</h3>
+                    </th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="input"
+                          name="firstname"
+                          placeholder={values.firstname}
+                          validate={validateUsernames}
+                        />
+                      </section>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="input"
+                          name="lastname"
+                          placeholder={values.lastname}
+                          validate={validateUsernames}
+                        />
+                      </section>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="email"
+                          name="email"
+                          placeholder={values.email}
+                        />
+                        <ErrorMessage name="email" component="div" />
+                      </section>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="password"
+                          name="password"
+                          placeholder="Password..."
+                        />
+                        <ErrorMessage name="password" component="div" />
+                      </section>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="password"
+                          name="password2"
+                          placeholder="Password Verify..."
+                        />
+                        <ErrorMessage name="password" component="div" />
+                      </section>
+                      <section className="stdinp">
+                        <DatetimeComp
+                          dtId="dtDob"
+                          dateFormat="YYYY-MM-DD"
+                          placeholder={values.dob}
+                        />
+                      </section>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="input"
+                          name="birthLocation"
+                          placeholder={values.lob}
+                        />
+                      </section>
+                      <section className="stdinp">
+                        <Field
+                          style={fieldStyle}
+                          type="input"
+                          name="currLocation"
+                          placeholder={values.locn}
+                        />
+                      </section>
+                      <section>{values.prefLangChoose}</section>
+                      <section className="stdinp">
+                        <Dropdown
+                          className="adropdown"
+                          options={languageTags}
+                          onChange={onChangeLang}
+                          value={defaultOption}
+                          placeholder={values.prefLangChoose}
+                        />
+                      </section>
+                    </td>
+                    <td>
+                      <section>{values.famGrptypesMsg}</section>
+                      <section>
+                        <RadioButtons />
+                      </section>
+                    </td>
+                  </tr>
+                </table>
                 <section className="register">
                   <button
                     type="register"
                     onClick={this.handleCloseModal}
                     disabled={isSubmitting}
                   >
-                    Register
+                    {values.registerButton}
                   </button>
                 </section>
               </Form>
@@ -321,10 +293,6 @@ class RegistrationApp extends React.Component {
                 height: 25px;
                 width: 300px;
                 margin-bottom: 3px
-            }
-            .dt {
-                height: 100%;
-                margin-bottom: 3
             }
             .register {
                 height: 25px; width: 100%
