@@ -11,12 +11,10 @@ export const button = css`
       border: 1px solid black;
       margin: 0;
       outline: none;
-      background: #9ACD32;
+      background: white;
     },
-    button.register{ background: #9ACD32 },
-    button.close{ background: #E6E6FA },
     button:hover {
-        background-color: #bbdefb;
+        background-color: #ffa07a;
         border-color: darkgray
       }
   }`;

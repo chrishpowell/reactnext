@@ -83,14 +83,16 @@ const RadioButtons = () => (
     <style jsx="true">{`
       .radiobutton {
         height: 25px;
-        width: 75%;
-        border: 1px solid black;
+        width: 95%;
+        font-size: 12px;
+        border: 1px solid darkgrey;
+        background: white;
         display: flex;
         align-items: center;
-        margin-bottom: 3px;
+        margin: auto auto 3px auto;
       }
       .label {
-        width: 90%;
+        width: 93%;
       }
     `}</style>
   </>

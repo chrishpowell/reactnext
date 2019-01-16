@@ -26,6 +26,10 @@ const customStyles = {
   content: {
     backgroundColor: "#FFFFE0",
     fontSize: 14,
+    top: "2%",
+    right: "5%",
+    bottom: "auto",
+    left: "auto",
     fontFamily: ["Roboto", "Arial"].join(",")
   }
 };
@@ -49,7 +53,7 @@ const defaultOption = languageTags[0];
 const formValues = {
   mainTitle: "Registration",
   confMsg:
-    "On successfully registering, you will receive an email with a link which you select for confirmation",
+    "Note: On successfully registering, you will receive an email with a link which you select for confirmation.",
   closeButton: "Close... didn't want this page!",
   acctDetails: "Account details",
   acctTypes: "Account types",
@@ -63,7 +67,7 @@ const formValues = {
   locn: "Current location...",
   prefLangChoose: "Your preferred language",
   famGrpTypesMsg:
-    "[Note that Family and Group types require a Group manager to manage members of the group]",
+    "Selecting Family or Group types means you will be the Group Manager managing members of the group. You can add or change members at any time.",
   registerButton: "Register",
   userPrefLang: "en-US"
 };
@@ -129,19 +133,26 @@ class RegistrationApp extends React.Component {
     return (
       <div>
         <style jsx="true">{button}</style>
-        <button onClick={this.handleOpenModal}>Trigger Modal</button>
+        <button
+          style={{ width: "100%", height: "100%" }}
+          onClick={this.handleOpenModal}
+        >
+          Trigger Modal
+        </button>
         <Modal
           isOpen={this.state.showModal}
           style={customStyles}
           contentLabel="Minimal Modal Example"
         >
-          <h2>{formValues.mainTitle}</h2>
-          <p>{formValues.confMsg}</p>
-          <section className="stdinp">
-            <button className="closeregardless" onClick={this.handleCloseModal}>
+          <h2 align="center" className="regTitle">
+            {formValues.mainTitle}
+          </h2>
+          <section className="closeregardless">
+            <button className="closeButton" onClick={this.handleCloseModal}>
               {formValues.closeButton}
             </button>
           </section>
+
           <Formik
             initialValues={formValues}
             validate={values => {
@@ -162,114 +173,125 @@ class RegistrationApp extends React.Component {
               }, 400);
             }}
           >
-            {({ values, isSubmitting }) => (
-              <Form>
-                <table>
-                  <tr>
-                    <th>
-                      <h3>{values.acctDetails}</h3>
-                    </th>
-                    <th>
-                      <h3>{values.acctTypes}</h3>
-                    </th>
-                  </tr>
-                  <tr>
-                    <td>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="input"
-                          name="firstname"
-                          placeholder={values.firstname}
-                          validate={validateUsernames}
-                        />
-                      </section>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="input"
-                          name="lastname"
-                          placeholder={values.lastname}
-                          validate={validateUsernames}
-                        />
-                      </section>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="email"
-                          name="email"
-                          placeholder={values.email}
-                        />
-                        <ErrorMessage name="email" component="div" />
-                      </section>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="password"
-                          name="password"
-                          placeholder="Password..."
-                        />
-                        <ErrorMessage name="password" component="div" />
-                      </section>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="password"
-                          name="password2"
-                          placeholder="Password Verify..."
-                        />
-                        <ErrorMessage name="password" component="div" />
-                      </section>
-                      <section className="stdinp">
-                        <DatetimeComp
-                          dtId="dtDob"
-                          dateFormat="YYYY-MM-DD"
-                          placeholder={values.dob}
-                        />
-                      </section>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="input"
-                          name="birthLocation"
-                          placeholder={values.lob}
-                        />
-                      </section>
-                      <section className="stdinp">
-                        <Field
-                          style={fieldStyle}
-                          type="input"
-                          name="currLocation"
-                          placeholder={values.locn}
-                        />
-                      </section>
-                      <section>{values.prefLangChoose}</section>
-                      <section className="stdinp">
-                        <Dropdown
-                          className="adropdown"
-                          options={languageTags}
-                          onChange={onChangeLang}
-                          value={defaultOption}
-                          placeholder={values.prefLangChoose}
-                        />
-                      </section>
-                    </td>
-                    <td>
-                      <section>{values.famGrptypesMsg}</section>
-                      <section>
-                        <RadioButtons />
-                      </section>
-                    </td>
-                  </tr>
+            {({ values, handleSubmit, isSubmitting }) => (
+              <Form onSubmit={handleSubmit}>
+                <table style={{ marginBottom: 4 }}>
+                  <thead>
+                    <tr>
+                      <th>
+                        <h3>{values.acctDetails}</h3>
+                      </th>
+                      <th>
+                        <h3>{values.acctTypes}</h3>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ width: 300 }}>
+                        <section className="stdinp" style={{ marginTop: 2 }}>
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="firstname"
+                            placeholder={values.firstname}
+                            validate={validateUsernames}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="lastname"
+                            placeholder={values.lastname}
+                            validate={validateUsernames}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="email"
+                            name="email"
+                            placeholder={values.email}
+                          />
+                          <ErrorMessage name="email" component="div" />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="password"
+                            name="password"
+                            placeholder="Password..."
+                          />
+                          <ErrorMessage name="password" component="div" />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="password"
+                            name="password2"
+                            placeholder="Password Verify..."
+                          />
+                          <ErrorMessage name="password" component="div" />
+                        </section>
+                        <section className="stdinp">
+                          <DatetimeComp
+                            dtId="dtDob"
+                            dateFormat="YYYY-MM-DD"
+                            placeholder={values.dob}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="birthLocation"
+                            placeholder={values.lob}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="currLocation"
+                            placeholder={values.locn}
+                          />
+                        </section>
+                        <section className="stdinp" style={{ marginBottom: 2 }}>
+                          {values.prefLangChoose}
+                        </section>
+                        <section className="stdinp" style={{ marginTop: 0 }}>
+                          <Dropdown
+                            className="adropdown"
+                            options={languageTags}
+                            onChange={onChangeLang}
+                            value={defaultOption}
+                            placeholder={values.prefLangChoose}
+                          />
+                        </section>
+                      </td>
+                      <td style={{ width: 500 }}>
+                        <section>
+                          <RadioButtons />
+                        </section>
+                        <section className="famGrpMsg">
+                          {values.famGrpTypesMsg}
+                        </section>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
+
                 <section className="register">
                   <button
-                    type="register"
+                    className="regButton"
+                    type="submit"
                     onClick={this.handleCloseModal}
                     disabled={isSubmitting}
                   >
                     {values.registerButton}
                   </button>
+                  <section className="confMsg">{formValues.confMsg}</section>
                 </section>
               </Form>
             )}
@@ -277,39 +299,100 @@ class RegistrationApp extends React.Component {
         </Modal>
 
         <style jsx="true">{`
-            section { background: #ffffe0 }
-            .radiobutton {
-                height: 25px, width: 75%;
-                border: 1px solid black;
-                display: flex;
-                align-items: center;
-                margin-bottom: 3px
-            }
-            .closeegardless {
-                height: 25px, width: 100%;
-                margin-bottom: 3px
-            }
-            .stdinp {
-                height: 25px;
-                width: 300px;
-                margin-bottom: 3px
-            }
-            .register {
-                height: 25px; width: 100%
-            }
-            .afield {
-                width: 100%;
-                height: 100%;
-                box-sizing: border-box;
-                color: red
-            }
-            .adropdown {
-                width: 100%;
-                height: 25px;
-                box-sizing: border-box;
-                color: #000;
-                fontSize: 14px
-            }
+          section {
+            background: #dcdcdc;
+          }
+          .regTitle {
+            background: #ffffe0;
+            margin: 0 auto 4px auto;
+            width: 100%;
+          }
+          .famGrpMsg {
+            border: 1px solid darkgrey;
+            padding: 1px;
+            text-align: justify;
+            text-justify: inter-word;
+            background: #dcdcdc;
+            margin: 8px auto;
+            width: 95%;
+            font-size: 11px;
+          }
+          .confMsg {
+            padding: 0 3px 0 3px;
+            text-align: justify;
+            text-justify: inter-word;
+            width: 395px;
+            margin: 7px 2px 2px 0;
+            font-size: 12px;
+            font-weight: normal;
+            background: #ffffe0;
+          }
+          table {
+            width: 95%;
+            border: 1px solid darkgrey;
+            padding: 2px;
+            background: #ffffe0;
+            margin: auto;
+          }
+          td {
+            background: #dcdcdc;
+          }
+          th {
+            background: #8cbc8f;
+          }
+          h3 {
+            background: #8cbc8f;
+          }
+          .radiobutton {
+            height: 25px;
+            width: 75%;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+          }
+          .closeregardless {
+            height: 25px;
+            width: 325px;
+            margin: auto auto 15px auto;
+          }
+          .closeButton {
+            background: #90ee90;
+          }
+          .stdinp {
+            height: 25px;
+            width: 100%;
+            margin: 0 1px 3px 1px;
+          }
+          .register {
+            height: 70px;
+            width: 400px;
+            background: #ffffe0;
+            border: 1px solid lightgrey;
+            margin: 10px auto 0 auto;
+          }
+          .regButton {
+            height: 25px;
+            width: 325px;
+            fontweight: 900;
+            background: #90ee90;
+            position: relative;
+            margin-left: 40px;
+            margin-top: 4px;
+          }
+          .afield {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            color: red;
+          }
+          .adropdown {
+            width: 100%;
+            height: 25px;
+            box-sizing: border-box;
+            color: #000;
+            fontsize: 14px;
+          }
         `}</style>
       </div>
     );
