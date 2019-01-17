@@ -36,18 +36,33 @@ const customStyles = {
 
 // Languages (*I18N* loaded)
 const languageTags = [
-  { value: "en-GB", label: "en-GB [British English]" },
-  { value: "en-US", label: "en-US [American English]" },
-  { value: "en-CA", label: "en-CA [Canadian English]" },
-  { value: "zh-CN", label: "zh-CN [中国大陆, 简化字符]" },
-  { value: "zh-HK", label: "zh-HK [Hong Kong, traditional characters]" },
-  { value: "fr-BE", label: "fr-BE [Française de Belgique]" },
-  { value: "fr-FR", label: "fr-FR [Français standard (notamment en France)]" },
   {
-    value: "es-ES",
-    label: "es-ES [Castilian Spanish (Central-Northern Spain)]"
+    type: "group",
+    name: "European",
+    items: [
+      { value: "en-GB", label: "en-GB [British English]" },
+      { value: "en-US", label: "en-US [American English]" },
+      { value: "en-CA", label: "en-CA [Canadian English]" },
+      { value: "fr-BE", label: "fr-BE [Française de Belgique]" },
+      {
+        value: "fr-FR",
+        label: "fr-FR [Français standard (notamment en France)]"
+      },
+      {
+        value: "es-ES",
+        label: "es-ES [Castilian Spanish (Central-Northern Spain)]"
+      },
+      { value: "es-MX", label: "es-MX [Mexican Spanish]" }
+    ]
   },
-  { value: "es-MX", label: "es-MX [Mexican Spanish]" }
+  {
+    type: "group",
+    name: "Asian",
+    items: [
+      { value: "zh-CN", label: "zh-CN [中国大陆, 简化字符]" },
+      { value: "zh-HK", label: "zh-HK [Hong Kong, traditional characters]" }
+    ]
+  }
 ];
 // Default language
 const defaultOption = languageTags[0];

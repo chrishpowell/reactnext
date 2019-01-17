@@ -9,3 +9,4 @@
 //import styled from "react-emotion";
 // Predikt font
 //import "typeface-open-sans";
+// Get from netbeans
