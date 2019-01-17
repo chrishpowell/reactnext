@@ -14,7 +14,7 @@ export const button = css`
       background: white;
     },
     button:hover {
-        background-color: #ffa07a;
+        background: #ffa07a;
         border-color: darkgray
       }
   }`;

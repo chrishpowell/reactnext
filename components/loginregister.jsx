@@ -10,7 +10,7 @@
 import Modal from "react-modal";
 // Dropdown
 import Dropdown from "react-dropdown";
-import "react-dropdown/style.css";
+import css from "react-dropdown/style.css";
 // Datetime (DoB)
 import DatetimeComp from "../components/datetime";
 // Radio buttons
@@ -36,15 +36,18 @@ const customStyles = {
 
 // Languages (*I18N* loaded)
 const languageTags = [
-  "en-GB [British English]",
-  "en-US [American English]",
-  "en-CA [Canadian English]",
-  "zh-CN [Mainland China, simplified characters]",
-  "zh-HK [Hong Kong, traditional characters]",
-  "fr-BE [Belgian French]",
-  "fr-FR [Standard French (especially in France)]",
-  "es-ES [Castilian Spanish (Central-Northern Spain)]",
-  "es-MX [Mexican Spanish]"
+  { value: "en-GB", label: "en-GB [British English]" },
+  { value: "en-US", label: "en-US [American English]" },
+  { value: "en-CA", label: "en-CA [Canadian English]" },
+  { value: "zh-CN", label: "zh-CN [中国大陆, 简化字符]" },
+  { value: "zh-HK", label: "zh-HK [Hong Kong, traditional characters]" },
+  { value: "fr-BE", label: "fr-BE [Française de Belgique]" },
+  { value: "fr-FR", label: "fr-FR [Français standard (notamment en France)]" },
+  {
+    value: "es-ES",
+    label: "es-ES [Castilian Spanish (Central-Northern Spain)]"
+  },
+  { value: "es-MX", label: "es-MX [Mexican Spanish]" }
 ];
 // Default language
 const defaultOption = languageTags[0];
@@ -173,8 +176,8 @@ class RegistrationApp extends React.Component {
               }, 400);
             }}
           >
-            {({ values, handleSubmit, isSubmitting }) => (
-              <Form onSubmit={handleSubmit}>
+            {({ values, isSubmitting }) => (
+              <Form>
                 <table style={{ marginBottom: 4 }}>
                   <thead>
                     <tr>
@@ -262,7 +265,10 @@ class RegistrationApp extends React.Component {
                         </section>
                         <section className="stdinp" style={{ marginTop: 0 }}>
                           <Dropdown
-                            className="adropdown"
+                            className={css["Dropdown-root"]}
+                            controlClassName={css["Dropdown-control"]}
+                            menuClassName={css["Dropdown-menu"]}
+                            arrowClassName={css["Dropdown-arrow"]}
                             options={languageTags}
                             onChange={onChangeLang}
                             value={defaultOption}
