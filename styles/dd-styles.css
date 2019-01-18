@@ -6,13 +6,16 @@
   position: relative;
   overflow: hidden;
   background-color: white;
-  border: 1px solid #ccc;
+  border: 1px solid darkgrey;
   border-radius: 2px;
   box-sizing: border-box;
+  height: 25px;
   color: #333;
   cursor: default;
   outline: none;
-  padding: 8px 52px 8px 10px;
+  padding: 2px 52px 8px 0;
+  margin: 0;
+  font-size: 14px;
   transition: all 200ms ease;
 }
 
@@ -27,10 +30,10 @@
   content: " ";
   display: block;
   height: 0;
-  margin-top: -ceil(2.5);
+  margin-top: -ceil(1.2);
   position: absolute;
   right: 10px;
-  top: 14px;
+  top: 10px;
   width: 0;
 }
 
@@ -41,15 +44,17 @@
 
 .ddmenu {
   background-color: white;
-  border: 1px solid #ccc;
+  border: 1px solid darkgrey;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
   margin-top: -1px;
-  max-height: 200px;
+  max-height: 100px;
   overflow-y: auto;
   position: absolute;
+  font-size: 12px;
   top: 100%;
   width: 100%;
+  cursor: pointer;
   z-index: 1000;
   -webkit-overflow-scrolling: touch;
 }

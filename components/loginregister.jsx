@@ -10,7 +10,7 @@
 import Modal from "react-modal";
 // Dropdown
 import Dropdown from "react-dropdown";
-import css from "react-dropdown/style.css";
+import css from "../styles/dd-styles.css";
 // Datetime (DoB)
 import DatetimeComp from "../components/datetime";
 // Radio buttons
@@ -38,7 +38,7 @@ const customStyles = {
 const languageTags = [
   {
     type: "group",
-    name: "European",
+    name: "European:",
     items: [
       { value: "en-GB", label: "en-GB [British English]" },
       { value: "en-US", label: "en-US [American English]" },
@@ -57,7 +57,7 @@ const languageTags = [
   },
   {
     type: "group",
-    name: "Asian",
+    name: "Asian:",
     items: [
       { value: "zh-CN", label: "zh-CN [中国大陆, 简化字符]" },
       { value: "zh-HK", label: "zh-HK [Hong Kong, traditional characters]" }
@@ -275,15 +275,17 @@ class RegistrationApp extends React.Component {
                             placeholder={values.locn}
                           />
                         </section>
-                        <section className="stdinp" style={{ marginBottom: 2 }}>
+                        <section
+                          style={{ height: 15, marginBottom: 1, fontSize: 12 }}
+                        >
                           {values.prefLangChoose}
                         </section>
                         <section className="stdinp" style={{ marginTop: 0 }}>
                           <Dropdown
-                            className={css["Dropdown-root"]}
-                            controlClassName={css["Dropdown-control"]}
-                            menuClassName={css["Dropdown-menu"]}
-                            arrowClassName={css["Dropdown-arrow"]}
+                            className={css.ddroot}
+                            controlClassName={css.ddcontrol}
+                            menuClassName={css.ddmenu}
+                            arrowClassName={css.ddarrow}
                             options={languageTags}
                             onChange={onChangeLang}
                             value={defaultOption}
