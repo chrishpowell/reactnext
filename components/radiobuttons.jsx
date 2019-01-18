@@ -43,6 +43,12 @@ const accountTypeList = [
 // Determine default radio button
 const accountTypeChkdId = accountTypeList[0].id;
 
+// *** Remove ***
+const onChangeAcctType = index => {
+  //accountTypeList.accountTypeId = value;
+  console.log("Account type: %o %o", accountTypeList[index], accountTypeLocale);
+};
+
 //... Main class
 const RadioButtons = () => (
   <>
@@ -51,7 +57,7 @@ const RadioButtons = () => (
         name="accountTypeId"
         render={arrayHelpers => (
           <>
-            {accountTypeList.map(accountType => (
+            {accountTypeList.map((accountType, index) => (
               <section className="radiobutton" key={accountType.id}>
                 <input
                   type="radio"
@@ -60,9 +66,7 @@ const RadioButtons = () => (
                   id={accountType.id}
                   defaultChecked={accountType.id == accountTypeChkdId}
                   onChange={e => {
-                    e.target.checked
-                      ? (accountTypeList.accountTypeId = accountType.id)
-                      : null;
+                    e.target.checked ? onChangeAcctType(index) : null;
                   }}
                 />
                 &nbsp;

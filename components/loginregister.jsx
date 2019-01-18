@@ -65,7 +65,7 @@ const languageTags = [
   }
 ];
 // Default language
-const defaultOption = languageTags[0];
+const defaultOption = languageTags[0].items[0];
 
 // Form(ik) fields initial values (*I18N* loaded)
 const formValues = {
@@ -106,11 +106,7 @@ const fieldStyle = {
 Modal.setAppElement("#registration");
 
 const onChangeLang = value => {
-  console.log(`Pref. language: ${value}`);
-};
-
-const onChangeAcctType = value => {
-  console.log(`Account type: ${value}`);
+  console.log("Pref. language: %o", value);
 };
 
 //... Functions (Validation)
@@ -152,6 +148,7 @@ class RegistrationApp extends React.Component {
       <div>
         <style jsx="true">{button}</style>
         <button
+          type="button"
           style={{ width: "100%", height: "100%" }}
           onClick={this.handleOpenModal}
         >
@@ -166,7 +163,11 @@ class RegistrationApp extends React.Component {
             {formValues.mainTitle}
           </h2>
           <section className="closeregardless">
-            <button className="closeButton" onClick={this.handleCloseModal}>
+            <button
+              type="button"
+              className="closeButton"
+              onClick={this.handleCloseModal}
+            >
               {formValues.closeButton}
             </button>
           </section>
@@ -184,6 +185,7 @@ class RegistrationApp extends React.Component {
               }
               return error;
             }}
+            //... Submit and fake server delay
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
@@ -402,19 +404,6 @@ class RegistrationApp extends React.Component {
             position: relative;
             margin-left: 40px;
             margin-top: 4px;
-          }
-          .afield {
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-            color: red;
-          }
-          .adropdown {
-            width: 100%;
-            height: 25px;
-            box-sizing: border-box;
-            color: #000;
-            fontsize: 14px;
           }
         `}</style>
       </div>
