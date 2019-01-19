@@ -105,6 +105,7 @@ const fieldStyle = {
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement("#registration");
 
+// *** Remove ***
 const onChangeLang = value => {
   console.log("Pref. language: %o", value);
 };
@@ -185,7 +186,7 @@ class RegistrationApp extends React.Component {
               }
               return error;
             }}
-            //... Submit and fake server delay
+            //... 'Submit' and fake server delay
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
@@ -332,6 +333,22 @@ class RegistrationApp extends React.Component {
             margin: 0 auto 4px auto;
             width: 100%;
           }
+          table {
+            width: 95%;
+            border: 1px solid darkgrey;
+            padding: 2px;
+            background: #ffffe0;
+            margin: auto;
+          }
+          td {
+            background: #dcdcdc;
+          }
+          th {
+            background: #8cbc8f;
+          }
+          h3 {
+            background: #8cbc8f;
+          }
           .famGrpMsg {
             border: 1px solid darkgrey;
             padding: 1px;
@@ -351,30 +368,6 @@ class RegistrationApp extends React.Component {
             font-size: 12px;
             font-weight: normal;
             background: #ffffe0;
-          }
-          table {
-            width: 95%;
-            border: 1px solid darkgrey;
-            padding: 2px;
-            background: #ffffe0;
-            margin: auto;
-          }
-          td {
-            background: #dcdcdc;
-          }
-          th {
-            background: #8cbc8f;
-          }
-          h3 {
-            background: #8cbc8f;
-          }
-          .radiobutton {
-            height: 25px;
-            width: 75%;
-            border: 1px solid black;
-            display: flex;
-            align-items: center;
-            margin-bottom: 3px;
           }
           .closeregardless {
             height: 25px;
