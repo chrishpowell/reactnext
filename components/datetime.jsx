@@ -6,6 +6,8 @@ import { Field } from "formik";
 // Datetime picked
 import DateTimePicker from "./datetimepicker";
 
+//onDateChange = date => this.setState({ date });
+
 class DatetimeComp extends React.Component {
   render() {
     // Validation...

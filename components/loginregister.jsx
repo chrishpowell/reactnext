@@ -14,7 +14,7 @@ import css from "../styles/dd-styles.css";
 // Datetime (DoB)
 import DatetimeComp from "../components/datetime";
 // Radio buttons
-import RadioButtons from "./radiobuttons";
+import AccountTypesComp from "./accounttypes";
 // Styles
 import styles, { button, body } from "../styles/global1";
 // Formik
@@ -66,8 +66,14 @@ const languageTags = [
 ];
 // Default language
 const defaultOption = languageTags[0].items[0];
+// Locale (*I18N* loaded)
+const accountTypeLocale = {
+  locale: "en-GB",
+  format: { style: "currency", currency: "GBP" },
+  perMonth: "per month"
+};
 
-// Form(ik) fields initial values (*I18N* loaded)
+// Form(ik) display fields initial values (*I18N* loaded)
 const formValues = {
   mainTitle: "Registration",
   confMsg:
@@ -75,6 +81,13 @@ const formValues = {
   closeButton: "Close... didn't want this page!",
   acctDetails: "Account details",
   acctTypes: "Account types",
+  prefLangChoose: "Your preferred language",
+  famGrpTypesMsg:
+    "Selecting Family or Group types means you will be the Group Manager managing members of the group. You can add or change members at any time.",
+  registerButton: "Register"
+};
+// Form(ik) input fields initial values (*I18N* loaded)
+const inpValues = {
   firstname: "First name...",
   lastname: "Last name...",
   email: "Email...",
@@ -83,10 +96,7 @@ const formValues = {
   dob: "Date of Birth...",
   lob: "Location of Birth...",
   locn: "Current location...",
-  prefLangChoose: "Your preferred language",
-  famGrpTypesMsg:
-    "Selecting Family or Group types means you will be the Group Manager managing members of the group. You can add or change members at any time.",
-  registerButton: "Register",
+  acctType: {},
   userPrefLang: "en-US"
 };
 
@@ -134,8 +144,6 @@ class RegistrationApp extends React.Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
-  onDateChange = date => this.setState({ date });
-
   handleOpenModal() {
     this.setState({ showModal: true });
   }
@@ -158,7 +166,7 @@ class RegistrationApp extends React.Component {
         <Modal
           isOpen={this.state.showModal}
           style={customStyles}
-          contentLabel="Minimal Modal Example"
+          contentLabel="Registration"
         >
           <h2 align="center" className="regTitle">
             {formValues.mainTitle}
@@ -174,9 +182,12 @@ class RegistrationApp extends React.Component {
           </section>
 
           <Formik
-            initialValues={formValues}
+            initialValues={inpValues}
+            // Use Yup schema...
             validate={values => {
               let error = {};
+              //validateUsernames(values.firstname)
+              //validateUsernames(values.lastname);
               if (!values.email) {
                 error.email = errorMsgs.emailReqd;
               } else if (
@@ -192,18 +203,20 @@ class RegistrationApp extends React.Component {
                 alert(JSON.stringify(values, null, 2));
                 setSubmitting(false);
               }, 400);
+
+              this.handleCloseModal;
             }}
           >
-            {({ values, isSubmitting }) => (
-              <Form>
+            {({ values, isSubmitting, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
                 <table style={{ marginBottom: 4 }}>
                   <thead>
                     <tr>
                       <th>
-                        <h3>{values.acctDetails}</h3>
+                        <h3>{formValues.acctDetails}</h3>
                       </th>
                       <th>
-                        <h3>{values.acctTypes}</h3>
+                        <h3>{formValues.acctTypes}</h3>
                       </th>
                     </tr>
                   </thead>
@@ -281,7 +294,7 @@ class RegistrationApp extends React.Component {
                         <section
                           style={{ height: 15, marginBottom: 1, fontSize: 12 }}
                         >
-                          {values.prefLangChoose}
+                          {formValues.prefLangChoose}
                         </section>
                         <section className="stdinp" style={{ marginTop: 0 }}>
                           <Dropdown
@@ -292,16 +305,15 @@ class RegistrationApp extends React.Component {
                             options={languageTags}
                             onChange={onChangeLang}
                             value={defaultOption}
-                            placeholder={values.prefLangChoose}
                           />
                         </section>
                       </td>
                       <td style={{ width: 500 }}>
                         <section>
-                          <RadioButtons />
+                          <AccountTypesComp acctLocale={accountTypeLocale} />
                         </section>
                         <section className="famGrpMsg">
-                          {values.famGrpTypesMsg}
+                          {formValues.famGrpTypesMsg}
                         </section>
                       </td>
                     </tr>
@@ -312,10 +324,9 @@ class RegistrationApp extends React.Component {
                   <button
                     className="regButton"
                     type="submit"
-                    onClick={this.handleCloseModal}
                     disabled={isSubmitting}
                   >
-                    {values.registerButton}
+                    {formValues.registerButton}
                   </button>
                   <section className="confMsg">{formValues.confMsg}</section>
                 </section>
