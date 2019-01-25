@@ -11,11 +11,6 @@
 import { FieldArray } from "formik";
 
 // Account Types (Radio Buttons) (*I18N* loaded)
-// const acctLocale = {
-//   locale: "en-GB",
-//   format: { style: "currency", currency: "GBP" },
-//   perMonth: "per month"
-// };
 const accountTypeList = [
   {
     id: "individual",
@@ -46,7 +41,7 @@ const accountTypeList = [
 // Determine default radio button
 const accountTypeChkdId = accountTypeList[0].id;
 
-// *** Remove ***
+// *** Send to parent ***
 const onChangeAcctType = (index, acctLocale) => {
   //accountTypeList.accountTypeId = value;
   console.log(

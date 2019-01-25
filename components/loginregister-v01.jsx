@@ -8,25 +8,18 @@ import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 // Modal
 import Modal from "react-modal";
 // Dropdown
-import Select from "react-select";
+import Dropdown from "react-dropdown";
 // Datetime (DoB)
-import DatetimeComp from "./datetime";
-// Location
-import LocationComp from "./location";
-// Validation
-import { isEmpty, isEmail, matches, toDate } from "validator";
-import * as yup from "yup";
+import DatetimeComp from "../components/datetime";
 // Styles
 import styles, { button, body } from "../styles/global1";
 //CSS 'reset'
 import "../styles/normalize.css";
-
-//
-console.clear();
+import css from "../styles/dd-styles.css";
 
 // Modal styles
 // Replace: fontFamily: ["Open Sans", "Roboto", "Arial"].join(",")
-const customModalStyles = {
+const customStyles = {
   content: {
     backgroundColor: "#FFFFE0",
     fontSize: 14,
@@ -38,65 +31,34 @@ const customModalStyles = {
   }
 };
 
-// Can't get <Field/> to work with styled-JSX
-const fieldStyle = {
-  width: "93%",
-  height: 20,
-  margin: "0 1px 2px 1px"
-};
-const fieldStyle1 = {
-  width: "93%",
-  height: 20,
-  margin: "3px 1px 2px 1px"
-};
-
-// Locale (dropdown) styling
-const localeStyles = {
-  control: styles => ({
-    ...styles,
-    backgroundColor: "white",
-    marginTop: 0,
-    height: 25,
-    minHeight: 25,
-    width: 275,
-    fontSize: 12
-  })
-};
-
 // --------------------------- [I18N stuff] ---------------------------
 // Languages (*I18N* loaded)
-const localeTags = [
+const languageTags = [
   {
     type: "group",
     name: "European:",
     items: [
-      { value: "en-GB", lang: "en", label: "en-GB [British English]" },
-      { value: "en-US", lang: "en", label: "en-US [American English]" },
-      { value: "en-CA", lang: "en", label: "en-CA [Canadian English]" },
-      { value: "fr-BE", lang: "fr", label: "fr-BE [Française de Belgique]" },
+      { value: "en-GB", label: "en-GB [British English]" },
+      { value: "en-US", label: "en-US [American English]" },
+      { value: "en-CA", label: "en-CA [Canadian English]" },
+      { value: "fr-BE", label: "fr-BE [Française de Belgique]" },
       {
         value: "fr-FR",
-        lang: "fr",
         label: "fr-FR [Français standard (notamment en France)]"
       },
       {
         value: "es-ES",
-        lang: "es",
         label: "es-ES [Castilian Spanish (Central-Northern Spain)]"
       },
-      { value: "es-MX", lang: "es", label: "es-MX [Mexican Spanish]" }
+      { value: "es-MX", label: "es-MX [Mexican Spanish]" }
     ]
   },
   {
     type: "group",
     name: "Asian:",
     items: [
-      { value: "zh-CN", lang: "zh", label: "zh-CN [中国大陆, 简化字符]" },
-      {
-        value: "zh-HK",
-        lang: "zh",
-        label: "zh-HK [Hong Kong, traditional characters]"
-      }
+      { value: "zh-CN", label: "zh-CN [中国大陆, 简化字符]" },
+      { value: "zh-HK", label: "zh-HK [Hong Kong, traditional characters]" }
     ]
   }
 ];
@@ -104,7 +66,6 @@ const localeTags = [
 // Locale (*I18N* loaded)
 const accountTypeLocale = {
   locale: "en-GB",
-  lang: "en",
   format: { style: "currency", currency: "GBP" },
   perMonth: "per month"
 };
@@ -125,8 +86,8 @@ const formValues = {
 
 // Form(ik) input fields initial values (*I18N* loaded)
 const inpValuesI18N = {
-  familyname: "Family name...",
-  othername: "Other/given names...",
+  firstname: "First name...",
+  lastname: "Last name...",
   email: "Email...",
   password: "Password...",
   password2: "Password validate...",
@@ -171,80 +132,65 @@ const accountTypeList = [
 
 // Error messages (*I18N* loaded)
 const errorMsgs = {
-  userNameIsReqd: "Family name is required",
+  userReqd: "Username is required",
   userNameInvalid: "Not a recognised name string",
-  emailReqd: "A valid email is required",
-  pwdRequired: "A password is required",
-  pwdInvalid: "Your password must be 6 characters or more",
-  pwdConfirm: "Password confirmation is required!",
-  pwdNotSame: "Passwords do not match!",
-  dateInvalid: "A valid date is required"
+  emailReqd: "Email is required",
+  emailInvalid: "Invalid email address"
 };
 // --------------------------- [I18N stuff] ---------------------------
 
 // Default language
-const defaultLocaleOption = localeTags[0].items[0];
+const defaultLangOption = languageTags[0].items[0];
 
 // Determine default radio button
 const accountTypeChkdId = accountTypeList[0].id;
 
-// Form(ik) input fields initial values
+// Form(ik) input fields initial values (*I18N* loaded)
 const inpValues = {
-  familyname: "",
-  othername: "",
+  firstname: "",
+  lastname: "",
   email: "",
   password: "",
   password2: "",
-  dob: new Date("January 1, 2000 00:00:00"),
-  birthLocation: { lat: 0.0, lon: 0.0, citytown: "", country: "" },
-  currLocation: { lat: 0.0, lon: 0.0, citytown: "", country: "" },
-  locale: {},
-  accountType: defaultLocaleOption,
+  dob: {},
+  lob: {},
+  locn: {},
+  accountType: defaultLangOption,
   userPrefLang: accountTypeLocale.locale
 };
 
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement("#registration");
 
-// --------------------------- [Validation] ---------------------------
-//  /\b[a-z]+(?:['-]?[a-z]+)*\b/
-const reUsername = new RegExp(/\b[a-z]+(?:['-]?[a-z]+)*\b/);
-const validUserAcctSchema = yup.object().shape({
-  familyname: yup
-    .string()
-    .matches(/\b[a-z]+(?:['-]?[a-z]+)*\b/)
-    .required(errorMsgs.userNameIsReqd),
-  othername: yup.string().matches(reUsername),
-  email: yup
-    .string()
-    .email(errorMsgs.emailReqd)
-    .required(errorMsgs.emailReqd),
-  password: yup
-    .string()
-    .min(6, errorMsgs.pwdInvalid)
-    .required(errorMsgs.pwdRequired),
-  password2: yup.string().oneOf([yup.ref("password")], errorMsgs.pwdNotSame)
-  // dob: yup.date().default(() => {
-  //   new Date("January 1, 2000 00:00:00");
-  //})
-});
-// --------------------------- [Validation] ---------------------------
+//... Functions (Validation)
+const validateUsernames = name => {
+  let error;
+  if (!name) {
+    error = errorMsgs.userReqd;
+  } else if (!/^[^\\\./:\*\?\""<>\|]{1}[^\\/:\*\?\""<>\|]{0,50}$/i.test(name)) {
+    error = errorMsgs.userNameInvalid;
+  }
+  return error;
+};
 
-//... ===========================================================================
-//...     M A I N
-//... ===========================================================================
+// Can't get <Field/> to work with styled-JSX
+const fieldStyle = {
+  width: "93%"
+};
+
+//... M A I N
 class RegistrationApp extends React.Component {
   constructor() {
     super();
     this.state = {
       showModal: false,
       date: new Date(),
-      localeChosen: ""
+      langChosen: ""
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    //this.handleLocaleChoice = this.handleLocaleChoice.bind(this);
+    this.handleLangChoice = this.handleLangChoice.bind(this);
   }
 
   // Modal stuff
@@ -257,9 +203,9 @@ class RegistrationApp extends React.Component {
   }
 
   // Language/locale stuff
-  handleLocaleChoice(option) {
-    console.log("Locale pref.:", option.label);
-    //this.setState({ localeChosen: option });
+  handleLangChoice(option) {
+    console.log("Language pref.:", option.label);
+    this.setState({ langChosen: option });
   }
 
   // Dates stuff
@@ -268,7 +214,7 @@ class RegistrationApp extends React.Component {
   // Location stuff
   handleLocation() {}
 
-  //... Ok, let's get on with it
+  //... Ok, get on with it
   render() {
     return (
       <div>
@@ -283,7 +229,7 @@ class RegistrationApp extends React.Component {
 
         <Modal
           isOpen={this.state.showModal}
-          style={customModalStyles}
+          style={customStyles}
           contentLabel="Registration"
         >
           <h2 align="center" className="regTitle">
@@ -301,8 +247,20 @@ class RegistrationApp extends React.Component {
 
           <Formik
             initialValues={inpValues}
-            // Validation
-            validationSchema={validUserAcctSchema}
+            // Use Yup schema...
+            validate={values => {
+              let error = {};
+              //validateUsernames(values.firstname)
+              //validateUsernames(values.lastname);
+              if (!values.email) {
+                error.email = errorMsgs.emailReqd;
+              } else if (
+                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+              ) {
+                error.email = errorMsgs.emailInvalid;
+              }
+              return error;
+            }}
             //... 'Submit' and fake server delay
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
@@ -313,7 +271,7 @@ class RegistrationApp extends React.Component {
               this.handleCloseModal;
             }}
           >
-            {({ values, errors, isSubmitting, handleSubmit }) => (
+            {({ values, isSubmitting, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <table style={{ marginBottom: 4 }}>
                   <thead>
@@ -329,75 +287,89 @@ class RegistrationApp extends React.Component {
                   <tbody>
                     <tr>
                       <td style={{ width: 300 }}>
-                        <Field
-                          style={fieldStyle1}
-                          type="input"
-                          name="familyname"
-                          placeholder={inpValuesI18N.familyname}
-                        />
-                        <ErrorMessage name="familyname" component="div" />
-                        <Field
-                          style={fieldStyle}
-                          type="input"
-                          name="othername"
-                          placeholder={inpValuesI18N.othername}
-                        />
-                        <ErrorMessage name="othername" component="div" />
-                        <Field
-                          style={fieldStyle}
-                          type="email"
-                          name="email"
-                          placeholder={inpValuesI18N.email}
-                        />
-                        <ErrorMessage name="email" component="div" />
-                        <Field
-                          style={fieldStyle}
-                          type="password"
-                          name="password"
-                          placeholder={inpValuesI18N.password}
-                        />
-                        <ErrorMessage name="password" component="div" />
-                        <Field
-                          style={fieldStyle}
-                          type="password"
-                          name="password2"
-                          placeholder={inpValuesI18N.password2}
-                        />
-                        <ErrorMessage name="password2" component="div" />
-                        <DatetimeComp
-                          name="dob"
-                          dtId="dtDob"
-                          style={fieldStyle}
-                          datetimeFormat="YYYY-MM-DD HH:MM"
-                          placeholder={inpValuesI18N.dob}
-                        />
-                        <LocationComp
-                          style={fieldStyle}
-                          type="input"
-                          name="birthLocation"
-                          placeholder={inpValuesI18N.lob}
-                        />
-                        <LocationComp
-                          style={fieldStyle}
-                          type="input"
-                          name="currLocation"
-                          placeholder={inpValuesI18N.locn}
-                        />
+                        <section className="stdinp" style={{ marginTop: 2 }}>
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="firstname"
+                            placeholder={inpValuesI18N.firstname}
+                            validate={validateUsernames}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="lastname"
+                            placeholder={inpValuesI18N.lastname}
+                            validate={validateUsernames}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="email"
+                            name="email"
+                            placeholder={inpValuesI18N.email}
+                          />
+                          <ErrorMessage name="email" component="div" />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="password"
+                            name="password"
+                            placeholder={inpValuesI18N.password}
+                          />
+                          <ErrorMessage name="password" component="div" />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="password"
+                            name="password2"
+                            placeholder={inpValuesI18N.password2}
+                          />
+                          <ErrorMessage name="password" component="div" />
+                        </section>
+                        <section className="stdinp">
+                          <DatetimeComp
+                            dtId="dtDob"
+                            style={fieldStyle}
+                            datetimeFormat="YYYY-MM-DD HH:MM"
+                            placeholder={inpValuesI18N.dob}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="birthLocation"
+                            placeholder={inpValuesI18N.lob}
+                          />
+                        </section>
+                        <section className="stdinp">
+                          <Field
+                            style={fieldStyle}
+                            type="input"
+                            name="currLocation"
+                            placeholder={inpValuesI18N.locn}
+                          />
+                        </section>
                         <section
                           style={{ height: 15, marginBottom: 1, fontSize: 12 }}
                         >
                           {formValues.prefLangChoose}
                         </section>
-                        <section>
-                          <Select
-                            name="locale"
-                            styles={localeStyles}
-                            instanceId="locale"
-                            options={localeTags[0].items}
-                            defaultValue={defaultLocaleOption}
-                            onChange={ev => {
-                              values.locale = ev;
-                            }}
+                        <section className="stdinp" style={{ marginTop: 0 }}>
+                          <Dropdown
+                            className={css.ddroot}
+                            controlClassName={css.ddcontrol}
+                            menuClassName={css.ddmenu}
+                            arrowClassName={css.ddarrow}
+                            options={languageTags}
+                            onChange={this.handleLangChoice}
+                            value={defaultLangOption}
                           />
                         </section>
                       </td>
@@ -414,7 +386,7 @@ class RegistrationApp extends React.Component {
                                   >
                                     <input
                                       type="radio"
-                                      name="accountType"
+                                      name="at"
                                       style={{ marginLeft: 2 }}
                                       defaultChecked={
                                         accountType.id == accountTypeChkdId
@@ -538,9 +510,6 @@ class RegistrationApp extends React.Component {
             height: 25px;
             width: 100%;
             margin: 0 1px 3px 1px;
-          }
-          .locale {
-            height: 25px;
           }
           .register {
             height: 70px;

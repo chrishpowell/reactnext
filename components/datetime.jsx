@@ -18,6 +18,7 @@ class DatetimeComp extends React.Component {
         className={{ height: "100%" }}
         type="input"
         name="datetime"
+        value="2000.01.01 00:00"
         id={this.props.dtId}
         placeholder={this.props.placeholder}
       />
