@@ -16,6 +16,8 @@
     "react-modal": "^3.8.1",
     "react-select": "^2.3.0",
     "validator": "^10.11.0",
-    "yup": "^0.26.10"
+    "xregexp": "^4.2.4",
+    "yup": "^0.26.10",
+    "zeromq": "^5.1.0"
   }
 }

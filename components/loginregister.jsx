@@ -16,13 +16,15 @@ import LocationComp from "./location";
 // Validation
 import { isEmpty, isEmail, matches, toDate } from "validator";
 import * as yup from "yup";
+// RegEx
+import XRegExp from "xregexp";
 // Styles
 import styles, { button, body } from "../styles/global1";
 //CSS 'reset'
 import "../styles/normalize.css";
 
 //
-console.clear();
+//console.clear();
 
 // Modal styles
 // Replace: fontFamily: ["Open Sans", "Roboto", "Arial"].join(",")
@@ -64,50 +66,94 @@ const localeStyles = {
 };
 
 // --------------------------- [I18N stuff] ---------------------------
+// Locale (*I18N* loaded)
+const accountTypeLocale = {
+  locale: "en-GB",
+  lang: "en",
+  format: { style: "currency", currency: "GBP" },
+  perMonth: "per month",
+  unicodeVersion: "5.2",
+  regex: /\b[a-zA-Z]+(?:['-]?[a-zA-Z]+)*\b/
+};
+// Regex for this locale
+const reUsername = new XRegExp(accountTypeLocale.regex);
+
 // Languages (*I18N* loaded)
 const localeTags = [
   {
     type: "group",
     name: "European:",
     items: [
-      { value: "en-GB", lang: "en", label: "en-GB [British English]" },
-      { value: "en-US", lang: "en", label: "en-US [American English]" },
-      { value: "en-CA", lang: "en", label: "en-CA [Canadian English]" },
-      { value: "fr-BE", lang: "fr", label: "fr-BE [Française de Belgique]" },
       {
-        value: "fr-FR",
+        lang: "en",
+        regex: "Latin",
+        value: "en-GB",
+        label: "en-GB [British English]"
+      },
+      {
+        lang: "cy",
+        regex: "Latin",
+        value: "cy-GB",
+        label: "cy-GB [UK Cymraeg]"
+      },
+      { lang: "el", regex: "Greek", value: "el-GR", label: "el-GR [Ελληνικά]" },
+      {
+        lang: "en",
+        regex: "Latin",
+        value: "en-US",
+        label: "en-US [American English]"
+      },
+      {
+        lang: "en",
+        regex: "Latin",
+        value: "en-CA",
+        label: "en-CA [Canadian English]"
+      },
+      {
         lang: "fr",
+        regex: "Latin",
+        value: "fr-BE",
+        label: "fr-BE [Française de Belgique]"
+      },
+      {
+        lang: "fr",
+        regex: "Latin",
+        value: "fr-FR",
         label: "fr-FR [Français standard (notamment en France)]"
       },
       {
-        value: "es-ES",
         lang: "es",
-        label: "es-ES [Castilian Spanish (Central-Northern Spain)]"
+        regex: "Latin",
+        value: "es-ES",
+        label: "es-ES [Castellano Español (Centro-norte de España)]"
       },
-      { value: "es-MX", lang: "es", label: "es-MX [Mexican Spanish]" }
+      {
+        lang: "es",
+        regex: "Latin",
+        value: "es-MX",
+        label: "es-MX [Español Mexicano]"
+      }
     ]
   },
   {
     type: "group",
     name: "Asian:",
     items: [
-      { value: "zh-CN", lang: "zh", label: "zh-CN [中国大陆, 简化字符]" },
       {
-        value: "zh-HK",
         lang: "zh",
+        regex: "Chinese",
+        value: "zh-CN",
+        label: "zh-CN [中国大陆, 简化字符]"
+      },
+      {
+        lang: "zh",
+        regex: "Chinese",
+        value: "zh-HK",
         label: "zh-HK [Hong Kong, traditional characters]"
       }
     ]
   }
 ];
-
-// Locale (*I18N* loaded)
-const accountTypeLocale = {
-  locale: "en-GB",
-  lang: "en",
-  format: { style: "currency", currency: "GBP" },
-  perMonth: "per month"
-};
 
 // Form(ik) display fields initial values (*I18N* loaded)
 const formValues = {
@@ -207,12 +253,10 @@ const inpValues = {
 Modal.setAppElement("#registration");
 
 // --------------------------- [Validation] ---------------------------
-//  /\b[a-z]+(?:['-]?[a-z]+)*\b/
-const reUsername = new RegExp(/\b[a-z]+(?:['-]?[a-z]+)*\b/);
 const validUserAcctSchema = yup.object().shape({
   familyname: yup
     .string()
-    .matches(/\b[a-z]+(?:['-]?[a-z]+)*\b/)
+    .matches(reUsername)
     .required(errorMsgs.userNameIsReqd),
   othername: yup.string().matches(reUsername),
   email: yup
