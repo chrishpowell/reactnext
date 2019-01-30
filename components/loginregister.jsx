@@ -75,8 +75,6 @@ const accountTypeLocale = {
   unicodeVersion: "5.2",
   regex: /\b[a-zA-Z]+(?:['-]?[a-zA-Z]+)*\b/
 };
-// Regex for this locale
-const reUsername = new XRegExp(accountTypeLocale.regex);
 
 // Languages (*I18N* loaded)
 const localeTags = [
@@ -227,6 +225,9 @@ const errorMsgs = {
   dateInvalid: "A valid date is required"
 };
 // --------------------------- [I18N stuff] ---------------------------
+
+// Regex for this locale
+const reUsername = new XRegExp(accountTypeLocale.regex);
 
 // Default language
 const defaultLocaleOption = localeTags[0].items[0];
