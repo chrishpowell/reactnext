@@ -13,8 +13,9 @@ import Select from "react-select";
 import DatetimeComp from "./datetime";
 // Location
 import LocationComp from "./location";
+// Lat, Lon
+import GetLatLon from "./geolocation";
 // Validation
-import { isEmpty, isEmail, matches, toDate } from "validator";
 import * as yup from "yup";
 // RegEx
 import XRegExp from "xregexp";
@@ -154,7 +155,7 @@ const localeTags = [
 ];
 
 // Form(ik) display fields initial values (*I18N* loaded)
-const formValues = {
+const formValuesI18N = {
   mainTitle: "Registration",
   confMsg:
     "Note: On successfully registering, you will receive an email with a link which you select for confirmation.",
@@ -175,8 +176,8 @@ const inpValuesI18N = {
   password: "Password...",
   password2: "Password validate...",
   dob: "Date of Birth...",
-  lob: "Location of Birth...",
-  locn: "Current location..."
+  lob: "Birth locn...",
+  locn: "Curr locn..."
 };
 
 // Account Types (Radio Buttons) (*I18N* loaded)
@@ -284,13 +285,21 @@ class RegistrationApp extends React.Component {
     this.state = {
       showModal: false,
       date: new Date(),
-      localeChosen: ""
+      localeChosen: "en-US",
+      location: { longitude: 0.0, latitude: 0.0 }
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     //this.handleLocaleChoice = this.handleLocaleChoice.bind(this);
   }
+
+  getLatLon = newLocation => {
+    this.setState({ location: newLocation });
+  };
+  getLocale = newLocale => {
+    this.setState({ locale: newLocale });
+  };
 
   // Modal stuff
   handleOpenModal() {
@@ -313,6 +322,8 @@ class RegistrationApp extends React.Component {
   // Location stuff
   handleLocation() {}
 
+  componentDidMount() {}
+
   //... Ok, let's get on with it
   render() {
     return (
@@ -331,8 +342,9 @@ class RegistrationApp extends React.Component {
           style={customModalStyles}
           contentLabel="Registration"
         >
+          <GetLatLon getLatLon={this.getLatLon} />;
           <h2 align="center" className="regTitle">
-            {formValues.mainTitle}
+            {formValuesI18N.mainTitle}
           </h2>
           <section className="closeregardless">
             <button
@@ -340,10 +352,9 @@ class RegistrationApp extends React.Component {
               className="closeButton"
               onClick={this.handleCloseModal}
             >
-              {formValues.closeButton}
+              {formValuesI18N.closeButton}
             </button>
           </section>
-
           <Formik
             initialValues={inpValues}
             // Validation
@@ -364,10 +375,10 @@ class RegistrationApp extends React.Component {
                   <thead>
                     <tr>
                       <th>
-                        <h3>{formValues.acctDetails}</h3>
+                        <h3>{formValuesI18N.acctDetails}</h3>
                       </th>
                       <th>
-                        <h3>{formValues.acctTypes}</h3>
+                        <h3>{formValuesI18N.acctTypes}</h3>
                       </th>
                     </tr>
                   </thead>
@@ -420,18 +431,40 @@ class RegistrationApp extends React.Component {
                           style={fieldStyle}
                           type="input"
                           name="birthLocation"
-                          placeholder={inpValuesI18N.lob}
+                          placeholder={
+                            inpValuesI18N.lob +
+                            "  [" +
+                            parseFloat(this.state.location.latitude).toFixed(
+                              2
+                            ) +
+                            "," +
+                            parseFloat(this.state.location.longitude).toFixed(
+                              2
+                            ) +
+                            "]"
+                          }
                         />
                         <LocationComp
                           style={fieldStyle}
                           type="input"
                           name="currLocation"
-                          placeholder={inpValuesI18N.locn}
+                          placeholder={
+                            inpValuesI18N.locn +
+                            "  [" +
+                            parseFloat(this.state.location.latitude).toFixed(
+                              2
+                            ) +
+                            "," +
+                            parseFloat(this.state.location.longitude).toFixed(
+                              2
+                            ) +
+                            "]"
+                          }
                         />
                         <section
                           style={{ height: 15, marginBottom: 1, fontSize: 12 }}
                         >
-                          {formValues.prefLangChoose}
+                          {formValuesI18N.prefLangChoose}
                         </section>
                         <section>
                           <Select
@@ -490,7 +523,7 @@ class RegistrationApp extends React.Component {
                           />
                         </section>
                         <section className="famGrpMsg">
-                          {formValues.famGrpTypesMsg}
+                          {formValuesI18N.famGrpTypesMsg}
                         </section>
                       </td>
                     </tr>
@@ -503,9 +536,11 @@ class RegistrationApp extends React.Component {
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    {formValues.registerButton}
+                    {formValuesI18N.registerButton}
                   </button>
-                  <section className="confMsg">{formValues.confMsg}</section>
+                  <section className="confMsg">
+                    {formValuesI18N.confMsg}
+                  </section>
                 </section>
               </Form>
             )}

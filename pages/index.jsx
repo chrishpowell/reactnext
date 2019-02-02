@@ -1,7 +1,7 @@
-import UserAccountState from "../components/useraccountstate";
+import RegistrationApp from "../components/loginregister";
 
 export default () => (
   <div id="registration">
-    <UserAccountState />
+    <RegistrationApp />
   </div>
 );
