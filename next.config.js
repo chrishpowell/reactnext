@@ -1,16 +1,22 @@
-const withCSS = require('@zeit/next-css');
-module.exports = withCSS({
-  webpack: config => {
-    // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty'
-    }
+const withCSS = require("@zeit/next-css");
+const withImages = require("next-images");
 
-    return config
-  },
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: "[local]___[hash:base64:5]",
-  }
-});
+module.exports = withCSS(
+  withImages({
+    webpack: config => {
+      // Fixes npm packages that depend on `fs` module & errors with maxmind
+      config.node = {
+        fs: "empty",
+        dns: "mock",
+        net: "mock"
+      };
+
+      return config;
+    },
+    cssModules: true,
+    cssLoaderOptions: {
+      importLoaders: 1,
+      localIdentName: "[local]___[hash:base64:5]"
+    }
+  })
+);

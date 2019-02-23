@@ -1,8 +1,9 @@
 import React from "react";
 
-class GetLatLon extends React.Component {
+class GetCurrLocation extends React.Component {
   sendLatLon(newLocation) {
     {
+      // newLocation: {latitude,longitude}
       this.props.getLatLon(newLocation);
     }
   }
@@ -28,4 +29,4 @@ class GetLatLon extends React.Component {
   }
 }
 
-export default GetLatLon;
+export default GetCurrLocation;

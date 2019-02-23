@@ -319,16 +319,26 @@ class RegistrationApp extends React.Component {
   // Dates stuff
   handleDoB() {}
 
-  // Location stuff
-  handleLocation() {}
-
-  componentDidMount() {}
+  // Doesn't update the state...
+  componentWillReceiveProps() {
+    <GetLatLon getLatLon={this.getLatLon} />;
+  }
 
   //... Ok, let's get on with it
   render() {
     return (
       <div>
         <style jsx="true">{button}</style>
+        <div
+          style={{
+            height: 55,
+            backgroundSize: "32px 50px",
+            backgroundImage: "url(/static/discoveri.png)",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: "white"
+          }}
+        />
         <button
           type="button"
           style={{ width: "100%", height: "100%" }}
@@ -342,7 +352,6 @@ class RegistrationApp extends React.Component {
           style={customModalStyles}
           contentLabel="Registration"
         >
-          <GetLatLon getLatLon={this.getLatLon} />;
           <h2 align="center" className="regTitle">
             {formValuesI18N.mainTitle}
           </h2>
@@ -431,35 +440,17 @@ class RegistrationApp extends React.Component {
                           style={fieldStyle}
                           type="input"
                           name="birthLocation"
-                          placeholder={
-                            inpValuesI18N.lob +
-                            "  [" +
-                            parseFloat(this.state.location.latitude).toFixed(
-                              2
-                            ) +
-                            "," +
-                            parseFloat(this.state.location.longitude).toFixed(
-                              2
-                            ) +
-                            "]"
-                          }
+                          lat={this.state.location.latitude}
+                          lon={this.state.location.longitude}
+                          placeholder={inpValuesI18N.lob}
                         />
                         <LocationComp
                           style={fieldStyle}
                           type="input"
                           name="currLocation"
-                          placeholder={
-                            inpValuesI18N.locn +
-                            "  [" +
-                            parseFloat(this.state.location.latitude).toFixed(
-                              2
-                            ) +
-                            "," +
-                            parseFloat(this.state.location.longitude).toFixed(
-                              2
-                            ) +
-                            "]"
-                          }
+                          lat={this.state.location.latitude}
+                          lon={this.state.location.longitude}
+                          placeholder={inpValuesI18N.locn}
                         />
                         <section
                           style={{ height: 15, marginBottom: 1, fontSize: 12 }}

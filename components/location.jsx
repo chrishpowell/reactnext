@@ -6,9 +6,9 @@ import { Field } from "formik";
 // Modal
 import Modal from "react-modal";
 // Map
-import MapGL, { NavigationControl } from "react-map-gl";
-// Styles
-import { button } from "../styles/global1";
+import MapGL, { NavigationControl, SVGOverlay, Marker } from "react-map-gl";
+// Mapbox styles
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const TOKEN =
   "pk.eyJ1IjoicnViYmVyYmFyb24iLCJhIjoiY2pyam5mZm5jMGQ1dDQzcXVkNThuY3c1eSJ9.JPcSvcCBPPJWg3EITtk8jg";
@@ -34,60 +34,136 @@ const customModalStyles = {
   }
 };
 
+// const formValuesI18N = {
+//   mainTitle: "UserMap",
+//   closeButton: "Close, and update Lat/Lon coords",
+//   locnText: "Your location",
+//   buttonText: "Show Map"
+// };
 const formValuesI18N = {
-  mainTitle: "UserMap",
-  closeButton: "Close and update Lat/Lon coords"
+  mainTitle: "Carte de l'utilisateur",
+  closeButton: "Fermer et mettre à jour les coords Lat/Lon",
+  locnText: "Votre emplacement",
+  buttonText: "Montrer Carte"
 };
 
+// ---------------------------
+//        M A I N
+// ---------------------------
 class LocationComp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+  state = {
+    viewport: {
+      latitude: 0.0,
+      longitude: 0.0,
+      zoom: 12.0,
+      bearing: 0,
+      pitch: 0,
+      width: 500,
+      height: 500
+    },
+    showModal: false,
+    locnValue: ""
+  };
+
+  // *** React says NOT to do this but only way to set initial state correctly... (@TODO fix?)
+  componentWillReceiveProps = theseProps => {
+    this.setState({
       viewport: {
-        latitude: 56.946251,
-        longitude: 24.10425,
+        latitude: theseProps.lat,
+        longitude: theseProps.lon,
         zoom: 12.0,
         bearing: 0,
         pitch: 0,
         width: 500,
         height: 500
       },
-      showModal: false
-    };
-
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
-    //this.handleLocaleChoice = this.handleLocaleChoice.bind(this);
-  }
+      locnValue:
+        this.props.placeholder +
+        "[" +
+        parseFloat(theseProps.lat).toFixed(2) +
+        "," +
+        parseFloat(theseProps.lon).toFixed(2) +
+        "]"
+    });
+    console.log("..> theseProps: %o", theseProps);
+  };
 
   // Modal stuff
-  handleOpenModal() {
+  handleOpenModal = () => {
     this.setState({ showModal: true });
-  }
+  };
 
-  handleCloseModal() {
+  handleCloseModal = () => {
     this.setState({ showModal: false });
-  }
+  };
+
+  // drawPOI = ({ project }, lat, lon) => {
+  //   const [cx, cy] = project([lon, lat]);
+  //   return <circle cx={cx} cy={cy} r={4} fill="blue" />;
+  // };
+  locnDragStart = event => {
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        longitude: event.lngLat[0],
+        latitude: event.lngLat[1]
+      },
+      locnValue:
+        this.props.placeholder +
+        "[" +
+        parseFloat(event.lngLat[1]).toFixed(2) +
+        "," +
+        parseFloat(event.lngLat[0]).toFixed(2) +
+        "]"
+    });
+  };
+  locnDrag = event => {
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        longitude: event.lngLat[0],
+        latitude: event.lngLat[1]
+      },
+      locnValue:
+        this.props.placeholder +
+        "[" +
+        parseFloat(event.lngLat[1]).toFixed(2) +
+        "," +
+        parseFloat(event.lngLat[0]).toFixed(2) +
+        "]"
+    });
+  };
+  locnDragEnd = event => {
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        longitude: event.lngLat[0],
+        latitude: event.lngLat[1]
+      },
+      locnValue:
+        this.props.placeholder +
+        "[" +
+        parseFloat(event.lngLat[1]).toFixed(2) +
+        "," +
+        parseFloat(event.lngLat[0]).toFixed(2) +
+        "]"
+    });
+  };
 
   render() {
     const { viewport } = this.state;
+    //console.log("Props..> %o, State..> %o", this.props, this.state);
+
     return (
       <>
         <Field
           type="input"
           name={this.props.name}
-          value={this.props.placeholder}
+          value={this.state.locnValue}
+          onChange={e => this.setState({ locnValue: e.target.value })}
         />
-        <button
-          onClick={this.handleOpenModal}
-          style={{
-            width: 100,
-            height: 25,
-            fontSize: 12,
-            backgroundColor: "lightyellow"
-          }}
-        >
-          Show Map
+        <button onClick={this.handleOpenModal} className="mapButton">
+          {formValuesI18N.buttonText}
         </button>
         <Modal
           isOpen={this.state.showModal}
@@ -99,22 +175,38 @@ class LocationComp extends React.Component {
               {...viewport}
               mapStyle="mapbox://styles/rubberbaron/cjrns1fhs4ol62smsdthgk98m"
               mapboxApiAccessToken={TOKEN}
+              onViewportChange={viewport => this.setState({ viewport })}
             >
+              <Marker
+                className="mapboxgl-marker-icon"
+                latitude={this.state.viewport.latitude}
+                longitude={this.state.viewport.longitude}
+                draggable={true}
+                onDragStart={this.locnDragStart}
+                onDrag={this.locnDrag}
+                ondragEnd={this.locnDragEnd}
+              >
+                <div
+                  style={{
+                    marginLeft: 20,
+                    width: 100,
+                    fontStyle: "italic"
+                  }}
+                >
+                  {formValuesI18N.locnText}
+                </div>
+              </Marker>
               <div className="nav" style={navStyle}>
                 <NavigationControl />
               </div>
             </MapGL>
           </section>
-          <section style={{ margin: "15px auto 5px auto" }}>
+          <section style={{ margin: "15px auto 0 100px" }}>
             <button
               type="button"
+              style={{ width: 300 }}
               onClick={this.handleCloseModal}
-              style={{
-                width: 300,
-                height: 25,
-                fontSize: 12,
-                backgroundColor: "#90ee90"
-              }}
+              className="mapButton"
             >
               {formValuesI18N.closeButton}
             </button>
@@ -122,20 +214,28 @@ class LocationComp extends React.Component {
         </Modal>
 
         <style jsx="true">{`
-          button {
-            width: 100%;
-            height: 100%;
+          .mapButton {
+            width: 100px;
+            height: 25px;
+            font-size: 12px;
             border-radius: 2px;
             color: black;
             border: 1px solid black;
-            margin: 0;
+            margin: auto;
             outline: none;
-            background: white;
+            background: #90ee90;
           }
-          ,
           button:hover {
             background: #ffa07a;
             border-color: darkgray;
+          }
+          .mapboxgl-marker-icon {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #90ee90;
+            background-image: radial-gradient(#641e16, #e74c3c, #fadbd8);
           }
         `}</style>
       </>

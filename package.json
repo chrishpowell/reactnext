@@ -6,21 +6,31 @@
     "start": "next start"
   },
   "dependencies": {
+    "@maxmind/geoip2-node": "^0.4.0",
     "@zeit/next-css": "^1.0.1",
+    "countries-list": "^2.4.2",
+    "find-json": "^0.0.1",
     "formik": "^1.4.2",
-    "leaflet": "^1.4.0",
+    "fs": "0.0.1-security",
+    "json-find": "^2.0.3",
+    "materialize-css": "^1.0.0-rc.2",
     "moment": "^2.23.0",
-    "next": "7.0.2",
-    "react": "16.7.0",
+    "next": "^8.0.1",
+    "next-images": "^1.0.4",
+    "nookies": "^2.0.1",
+    "public-ip": "^3.0.0",
+    "react": "*",
+    "react-cookie": "^3.0.8",
     "react-datetime": "^2.16.3",
-    "react-dom": "16.7.0",
-    "react-leaflet": "^2.2.0",
+    "react-dom": "*",
     "react-map-gl": "^4.0.10",
     "react-modal": "^3.8.1",
     "react-select": "^2.3.0",
     "validator": "^10.11.0",
+    "winston": "^3.2.1",
     "xregexp": "^4.2.4",
     "yup": "^0.26.10",
     "zeromq": "^5.1.0"
-  }
+  },
+  "devDependencies": {}
 }
