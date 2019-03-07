@@ -1,18 +1,24 @@
-/*
- * Location
- */
+// -------------------------------------
+//           LOCATION
+// -------------------------------------
 // Formik
 import { Field } from "formik";
 // Modal
 import Modal from "react-modal";
 // Map
-import MapGL, { NavigationControl, SVGOverlay, Marker } from "react-map-gl";
+import MapGL, { NavigationControl, Marker } from "react-map-gl";
 // Mapbox styles
 import "mapbox-gl/dist/mapbox-gl.css";
+// I18N form values to be loaded  *** French
+import { formValuesI18N } from "../config/i18n/I18Nlogreg-FR";
 
+//
+// - Mapbox token
+const MAPBOX = "mapbox://styles/rubberbaron/cjrns1fhs4ol62smsdthgk98m";
 const TOKEN =
   "pk.eyJ1IjoicnViYmVyYmFyb24iLCJhIjoiY2pyam5mZm5jMGQ1dDQzcXVkNThuY3c1eSJ9.JPcSvcCBPPJWg3EITtk8jg";
 
+// Navigation control
 const navStyle = {
   position: "absolute",
   top: 0,
@@ -34,19 +40,6 @@ const customModalStyles = {
   }
 };
 
-// const formValuesI18N = {
-//   mainTitle: "UserMap",
-//   closeButton: "Close, and update Lat/Lon coords",
-//   locnText: "Your location",
-//   buttonText: "Show Map"
-// };
-const formValuesI18N = {
-  mainTitle: "Carte de l'utilisateur",
-  closeButton: "Fermer et mettre à jour les coords Lat/Lon",
-  locnText: "Votre emplacement",
-  buttonText: "Montrer Carte"
-};
-
 // ---------------------------
 //        M A I N
 // ---------------------------
@@ -66,11 +59,12 @@ class LocationComp extends React.Component {
   };
 
   // *** React says NOT to do this but only way to set initial state correctly... (@TODO fix?)
+  // Called six! times for some reason...
   componentWillReceiveProps = theseProps => {
     this.setState({
       viewport: {
-        latitude: theseProps.lat,
-        longitude: theseProps.lon,
+        latitude: theseProps.locn.latitude,
+        longitude: theseProps.locn.longitude,
         zoom: 12.0,
         bearing: 0,
         pitch: 0,
@@ -80,9 +74,9 @@ class LocationComp extends React.Component {
       locnValue:
         this.props.placeholder +
         "[" +
-        parseFloat(theseProps.lat).toFixed(2) +
+        parseFloat(theseProps.locn.latitude).toFixed(2) +
         "," +
-        parseFloat(theseProps.lon).toFixed(2) +
+        parseFloat(theseProps.locn.longitude).toFixed(2) +
         "]"
     });
     console.log("..> theseProps: %o", theseProps);
@@ -101,6 +95,7 @@ class LocationComp extends React.Component {
   //   const [cx, cy] = project([lon, lat]);
   //   return <circle cx={cx} cy={cy} r={4} fill="blue" />;
   // };
+  // Mouse drag start
   locnDragStart = event => {
     this.setState({
       viewport: {
@@ -117,6 +112,7 @@ class LocationComp extends React.Component {
         "]"
     });
   };
+  // Mouse drag posn
   locnDrag = event => {
     this.setState({
       viewport: {
@@ -133,6 +129,7 @@ class LocationComp extends React.Component {
         "]"
     });
   };
+  // Mouse drag end
   locnDragEnd = event => {
     this.setState({
       viewport: {
@@ -152,7 +149,6 @@ class LocationComp extends React.Component {
 
   render() {
     const { viewport } = this.state;
-    //console.log("Props..> %o, State..> %o", this.props, this.state);
 
     return (
       <>
@@ -160,6 +156,7 @@ class LocationComp extends React.Component {
           type="input"
           name={this.props.name}
           value={this.state.locnValue}
+          placeholder={this.props.placeholder}
           onChange={e => this.setState({ locnValue: e.target.value })}
         />
         <button onClick={this.handleOpenModal} className="mapButton">
@@ -173,14 +170,14 @@ class LocationComp extends React.Component {
           <section>
             <MapGL
               {...viewport}
-              mapStyle="mapbox://styles/rubberbaron/cjrns1fhs4ol62smsdthgk98m"
+              mapStyle={MAPBOX}
               mapboxApiAccessToken={TOKEN}
               onViewportChange={viewport => this.setState({ viewport })}
             >
               <Marker
                 className="mapboxgl-marker-icon"
-                latitude={this.state.viewport.latitude}
-                longitude={this.state.viewport.longitude}
+                latitude={viewport.latitude}
+                longitude={viewport.longitude}
                 draggable={true}
                 onDragStart={this.locnDragStart}
                 onDrag={this.locnDrag}

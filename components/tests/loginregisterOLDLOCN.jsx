@@ -1,6 +1,6 @@
-// -------------------------------------
-//           REGISTRATION
-// -------------------------------------
+/*
+ * Registration
+ */
 // Predikt font
 // import "typeface-open-sans";
 // Formik
@@ -9,26 +9,25 @@ import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import Modal from "react-modal";
 // Dropdown
 import Select from "react-select";
+// Datetime (DoB)
+import DatetimeComp from "./datetime";
+// Location
+import LocationComp from "./location";
+// Lat, Lon
+import GetLatLon from "./geolocation";
 // Validation
 import * as yup from "yup";
 // RegEx
 import XRegExp from "xregexp";
 // Styles
-import { button } from "../styles/global1";
-// CSS 'reset'
+import styles, { button, body } from "../styles/global1";
+//CSS 'reset'
 import "../styles/normalize.css";
-// I18N stuff... to be loaded from cache
-import {
-  accountTypeLocale,
-  formValuesI18N,
-  inpValuesI18N,
-  accountTypeList,
-  errorMsgs
-} from "../config/i18n/I18Nlogreg-FR";
-import { localeTags } from "../config/i18n/I18NLangLists";
 
 //
-// --------------------------- [Styles] --------------------------------------
+//console.clear();
+
+// Modal styles
 // Replace: fontFamily: ["Open Sans", "Roboto", "Arial"].join(",")
 const customModalStyles = {
   content: {
@@ -42,11 +41,16 @@ const customModalStyles = {
   }
 };
 
-// Can't get <Field/> to work with styled-JSX!
+// Can't get <Field/> to work with styled-JSX
 const fieldStyle = {
   width: "93%",
   height: 20,
   margin: "0 1px 2px 1px"
+};
+const fieldStyle1 = {
+  width: "93%",
+  height: 20,
+  margin: "3px 1px 2px 1px"
 };
 
 // Locale (dropdown) styling
@@ -61,9 +65,10 @@ const localeStyles = {
     fontSize: 12
   })
 };
-// --------------------------- [Styles end] ----------------------------------
 
-// --------------------------- [Init and defaults] ---------------------------
+// Regex for this locale
+const reUsername = new XRegExp(accountTypeLocale.regex);
+
 // Default language
 const defaultLocaleOption = localeTags[0].items[0];
 
@@ -77,15 +82,18 @@ const inpValues = {
   email: "",
   password: "",
   password2: "",
+  dob: new Date("January 1, 2000 00:00:00"),
   birthLocation: { lat: 0.0, lon: 0.0, citytown: "", country: "" },
   currLocation: { lat: 0.0, lon: 0.0, citytown: "", country: "" },
   locale: {},
   accountType: defaultLocaleOption,
   userPrefLang: accountTypeLocale.locale
 };
-// --------------------------- [Init and defaults end] -----------------------
 
-// --------------------------- [Validation] ----------------------------------
+// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
+Modal.setAppElement("#registration");
+
+// --------------------------- [Validation] ---------------------------
 const validUserAcctSchema = yup.object().shape({
   familyname: yup
     .string()
@@ -105,40 +113,79 @@ const validUserAcctSchema = yup.object().shape({
   //   new Date("January 1, 2000 00:00:00");
   //})
 });
-// --------------------------- [Validation end] ------------------------------
+// --------------------------- [Validation] ---------------------------
 
-// Regex username check for this locale
-const reUsername = new XRegExp(accountTypeLocale.regex);
-
-// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
-Modal.setAppElement("#registration");
-
-//
-//
 //... ===========================================================================
 //...     M A I N
 //... ===========================================================================
 class RegistrationApp extends React.Component {
-  state = {
-    showModal: false
+  constructor() {
+    super();
+    this.state = {
+      showModal: false,
+      date: new Date(),
+      localeChosen: "en-US",
+      location: { longitude: 0.0, latitude: 0.0 }
+    };
+
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+    //this.handleLocaleChoice = this.handleLocaleChoice.bind(this);
+  }
+
+  getLatLon = newLocation => {
+    this.setState({ location: newLocation });
+  };
+  getLocale = newLocale => {
+    this.setState({ locale: newLocale });
   };
 
   // Modal stuff
-  handleOpenModal = () => {
+  handleOpenModal() {
     this.setState({ showModal: true });
-  };
+  }
 
-  handleCloseModal = () => {
+  handleCloseModal() {
     this.setState({ showModal: false });
-  };
+  }
+
+  // Language/locale stuff
+  handleLocaleChoice(option) {
+    console.log("Locale pref.:", option.label);
+    //this.setState({ localeChosen: option });
+  }
+
+  // Dates stuff
+  handleDoB() {}
+
+  // Doesn't update the state...
+  componentWillReceiveProps() {
+    <GetLatLon getLatLon={this.getLatLon} />;
+  }
 
   //... Ok, let's get on with it
   render() {
     return (
       <div>
         <style jsx="true">{button}</style>
+        <div
+          style={{
+            height: 55,
+            backgroundSize: "32px 50px",
+            backgroundImage: "url(/static/discoveri.png)",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: "white"
+          }}
+        />
+        <button
+          type="button"
+          style={{ width: "100%", height: "100%" }}
+          onClick={this.handleOpenModal}
+        >
+          Trigger Modal
+        </button>
 
-        {/* Here's where things really start... */}
         <Modal
           isOpen={this.state.showModal}
           style={customModalStyles}
@@ -160,7 +207,7 @@ class RegistrationApp extends React.Component {
             initialValues={inpValues}
             // Validation
             validationSchema={validUserAcctSchema}
-            //... 'Submit' and fake server delay [zeroMQ]
+            //... 'Submit' and fake server delay
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
@@ -170,13 +217,7 @@ class RegistrationApp extends React.Component {
               this.handleCloseModal;
             }}
           >
-            {({
-              values,
-              errors,
-              isSubmitting,
-              handleSubmit,
-              setFieldValue
-            }) => (
+            {({ values, errors, isSubmitting, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <table style={{ marginBottom: 4 }}>
                   <thead>
@@ -193,7 +234,7 @@ class RegistrationApp extends React.Component {
                     <tr>
                       <td style={{ width: 300 }}>
                         <Field
-                          style={fieldStyle}
+                          style={fieldStyle1}
                           type="input"
                           name="familyname"
                           placeholder={inpValuesI18N.familyname}
@@ -227,6 +268,29 @@ class RegistrationApp extends React.Component {
                           placeholder={inpValuesI18N.password2}
                         />
                         <ErrorMessage name="password2" component="div" />
+                        <DatetimeComp
+                          name="dob"
+                          dtId="dtDob"
+                          style={fieldStyle}
+                          datetimeFormat="YYYY-MM-DD HH:MM"
+                          placeholder={inpValuesI18N.dob}
+                        />
+                        <LocationComp
+                          style={fieldStyle}
+                          type="input"
+                          name="birthLocation"
+                          lat={this.state.location.latitude}
+                          lon={this.state.location.longitude}
+                          placeholder={inpValuesI18N.lob}
+                        />
+                        <LocationComp
+                          style={fieldStyle}
+                          type="input"
+                          name="currLocation"
+                          lat={this.state.location.latitude}
+                          lon={this.state.location.longitude}
+                          placeholder={inpValuesI18N.locn}
+                        />
                         <section
                           style={{ height: 15, marginBottom: 1, fontSize: 12 }}
                         >
@@ -280,11 +344,7 @@ class RegistrationApp extends React.Component {
                                         accountTypeLocale.format
                                       ).format(accountTypeList[index].price) +
                                         " " +
-                                        accountTypeLocale.perMonth +
-                                        " " +
-                                        (accountTypeList[index].perUser
-                                          ? accountTypeLocale.perUser
-                                          : "")}
+                                        accountTypeLocale.perMonth}
                                     </label>
                                   </section>
                                 ))}
@@ -371,7 +431,7 @@ class RegistrationApp extends React.Component {
             background: #90ee90;
           }
           .radiobutton {
-            height: 30px;
+            height: 25px;
             width: 95%;
             font-size: 12px;
             border: 1px solid darkgrey;

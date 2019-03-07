@@ -1,35 +1,53 @@
+// -------------------------------------
+//           USER CONTEXT
+// -------------------------------------
 import React from "react";
+import { Constants } from "./constants";
 
+//
+// - React context
 const userSession = React.createContext({});
-
 export const UserCtxProvider = userSession.Provider;
 export const UserCtxConsumer = userSession.Consumer;
 
-// User context
-let userStuff = {
-  email: "nobody@example.com",
-  IP: "0.0.0.0",
-  locale: { cookie: "Predikt.IO", lang: "un-UN" }
+//
+// - User context initial
+global.userStuff = {
+  email: Constants.defaultEmail,
+  IP: Constants.noIP,
+  locale: {
+    cookie: Constants.cookieName,
+    currCtry: Constants.unknownCountry,
+    resCtry: Constants.unknownCountry,
+    langLoc: Constants.unknownLangloc
+  },
+  ctryDetails: Constants.defCtryDetails
 };
 
-// Manipulate user context
+//
+// - Manipulate user context
 const UserContext = {
   Get: () => {
     return userStuff;
   },
   SetIP: IP => {
     userStuff.IP = IP;
-    console.log(":..> ", userStuff);
   },
   SetEmail: email => {
     userStuff.email = email;
   },
-  SetLocale: (cookie, lang) => {
+  SetLocale: (cookie, currCtry, resCtry, langLoc) => {
     userStuff.locale.cookie = cookie;
-    userStuff.locale.lang = lang;
+    userStuff.locale.currCtry = currCtry; // Where currently
+    userStuff.locale.resCtry = resCtry; // Resident country
+    userStuff.locale.langLoc = langLoc; // Eg: fr-FR
+  },
+  SetCtryDetails: (isoCode, cd) => {
+    userStuff.ctryDetails.isoCode = isoCode;
+    userStuff.ctryDetails.details = cd;
   },
   Dump: () => {
-    return JSON.stringify(userStuff);
+    return Object.entries(userStuff);
   }
 };
 

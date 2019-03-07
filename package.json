@@ -19,6 +19,7 @@
     "next-images": "^1.0.4",
     "nookies": "^2.0.1",
     "public-ip": "^3.0.0",
+    "rc-switch": "^1.9.0",
     "react": "*",
     "react-cookie": "^3.0.8",
     "react-datetime": "^2.16.3",

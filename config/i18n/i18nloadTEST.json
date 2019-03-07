@@ -1,9 +1,0 @@
-{
-  "locale": "fr-FR",
-  "lang": "fr",
-  "format": { "style": "currency", "currency": "EUR" },
-  "perMonth": "par mois",
-  "perUser": "par utilisateur",
-  "unicodeVersion": "5.2",
-  "regex": "/\b[a-zA-Z]+(?:['-]?[a-zA-Z]+)*\b/"
-}

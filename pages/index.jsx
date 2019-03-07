@@ -1,20 +1,8 @@
-// -------------------------------------
-//           INDEX PAGE
-// -------------------------------------
-import Navbar from "../components/navbar";
-import LandingPageApp from "../components/landingPage";
-import RegistrationApp from "../components/register";
-import LoginApp from "../components/login";
+//import RegistrationApp from "../components/register";
+import { LoginBox } from "../components/loginnregisterbox";
 
 export default () => (
-  <div>
-    <Navbar />
-    {/* Landing Page */}
-    <LandingPageApp />
-
-    {/* Register  (if selected) */}
-    {/* <RegistrationApp /> */}
-    {/* Login (if selected) */}
-    {/* <LoginApp /> */}
+  <div id="registration">
+    <LoginBox />
   </div>
 );

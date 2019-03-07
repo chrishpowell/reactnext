@@ -1,6 +1,6 @@
-/*
- * Registration
- */
+// -------------------------------------
+//           REGISTRATION
+// -------------------------------------
 // Predikt font
 // import "typeface-open-sans";
 // Formik
@@ -10,24 +10,31 @@ import Modal from "react-modal";
 // Dropdown
 import Select from "react-select";
 // Datetime (DoB)
-import DatetimeComp from "./datetime";
+import DatetimeComp from "./datetimecomp";
 // Location
 import LocationComp from "./location";
 // Lat, Lon
-import GetLatLon from "./geolocation";
+//import GetCurrLocation from "./geolocation";
 // Validation
 import * as yup from "yup";
 // RegEx
 import XRegExp from "xregexp";
 // Styles
 import styles, { button, body } from "../styles/global1";
-//CSS 'reset'
+// CSS 'reset'
 import "../styles/normalize.css";
+// I18N stuff... to be loaded from cache
+import {
+  accountTypeLocale,
+  formValuesI18N,
+  inpValuesI18N,
+  accountTypeList,
+  errorMsgs
+} from "../config/i18n/I18Nlogreg-FR";
+import { localeTags } from "../config/i18n/I18NLangLists";
 
 //
-//console.clear();
-
-// Modal styles
+// --------------------------- [Styles] --------------------------------------
 // Replace: fontFamily: ["Open Sans", "Roboto", "Arial"].join(",")
 const customModalStyles = {
   content: {
@@ -41,7 +48,7 @@ const customModalStyles = {
   }
 };
 
-// Can't get <Field/> to work with styled-JSX
+// Can't get <Field/> to work with styled-JSX!
 const fieldStyle = {
   width: "93%",
   height: 20,
@@ -65,170 +72,14 @@ const localeStyles = {
     fontSize: 12
   })
 };
+// --------------------------- [Styles end] ----------------------------------
 
-// --------------------------- [I18N stuff] ---------------------------
-// Locale (*I18N* loaded)
-const accountTypeLocale = {
-  locale: "en-GB",
-  lang: "en",
-  format: { style: "currency", currency: "GBP" },
-  perMonth: "per month",
-  unicodeVersion: "5.2",
-  regex: /\b[a-zA-Z]+(?:['-]?[a-zA-Z]+)*\b/
+// --------------------------- [Init and defaults] ---------------------------
+// Default locale and location
+const localeLocn = {
+  localeChosen: "en-US",
+  location: { longitude: 0.0, latitude: 0.0 }
 };
-
-// Languages (*I18N* loaded)
-const localeTags = [
-  {
-    type: "group",
-    name: "European:",
-    items: [
-      {
-        lang: "en",
-        regex: "Latin",
-        value: "en-GB",
-        label: "en-GB [British English]"
-      },
-      {
-        lang: "cy",
-        regex: "Latin",
-        value: "cy-GB",
-        label: "cy-GB [UK Cymraeg]"
-      },
-      { lang: "el", regex: "Greek", value: "el-GR", label: "el-GR [Ελληνικά]" },
-      {
-        lang: "en",
-        regex: "Latin",
-        value: "en-US",
-        label: "en-US [American English]"
-      },
-      {
-        lang: "en",
-        regex: "Latin",
-        value: "en-CA",
-        label: "en-CA [Canadian English]"
-      },
-      {
-        lang: "fr",
-        regex: "Latin",
-        value: "fr-BE",
-        label: "fr-BE [Française de Belgique]"
-      },
-      {
-        lang: "fr",
-        regex: "Latin",
-        value: "fr-FR",
-        label: "fr-FR [Français standard (notamment en France)]"
-      },
-      {
-        lang: "es",
-        regex: "Latin",
-        value: "es-ES",
-        label: "es-ES [Castellano Español (Centro-norte de España)]"
-      },
-      {
-        lang: "es",
-        regex: "Latin",
-        value: "es-MX",
-        label: "es-MX [Español Mexicano]"
-      }
-    ]
-  },
-  {
-    type: "group",
-    name: "Asian:",
-    items: [
-      {
-        lang: "zh",
-        regex: "Chinese",
-        value: "zh-CN",
-        label: "zh-CN [中国大陆, 简化字符]"
-      },
-      {
-        lang: "zh",
-        regex: "Chinese",
-        value: "zh-HK",
-        label: "zh-HK [Hong Kong, traditional characters]"
-      }
-    ]
-  }
-];
-
-// Form(ik) display fields initial values (*I18N* loaded)
-const formValuesI18N = {
-  mainTitle: "Registration",
-  confMsg:
-    "Note: On successfully registering, you will receive an email with a link which you select for confirmation.",
-  closeButton: "Close... didn't want this page!",
-  acctDetails: "Account details",
-  acctTypes: "Account types",
-  prefLangChoose: "Your preferred language",
-  famGrpTypesMsg:
-    "Selecting Family or Group types means you will be the Group Manager managing members of the group. You can add or change members at any time.",
-  registerButton: "Register"
-};
-
-// Form(ik) input fields initial values (*I18N* loaded)
-const inpValuesI18N = {
-  familyname: "Family name...",
-  othername: "Other/given names...",
-  email: "Email...",
-  password: "Password...",
-  password2: "Password validate...",
-  dob: "Date of Birth...",
-  lob: "Birth locn...",
-  locn: "Curr locn..."
-};
-
-// Account Types (Radio Buttons) (*I18N* loaded)
-const accountTypeList = [
-  {
-    id: "individual",
-    desc: "Individual [1 user, secure Home Page]",
-    price: 3.99
-  },
-  {
-    id: "family",
-    desc: "Family [2 to 5 users, secure Home Page]",
-    price: 7.99
-  },
-  {
-    id: "team",
-    desc: "Group [6 to 22 users, secure Home Page]",
-    price: 23.99
-  },
-  {
-    id: "smallbus",
-    desc: "Small business window [Global home page, no charting]",
-    price: 29.99
-  },
-  {
-    id: "syndicate",
-    desc: "Syndicated per user access [GraphQL/JSON data feed, min 20 users]",
-    price: 1.99
-  },
-  {
-    id: "corporate",
-    desc: "Corporate window [Global home page and marketing, no charting]",
-    price: 99.99
-  }
-];
-
-// Error messages (*I18N* loaded)
-const errorMsgs = {
-  userNameIsReqd: "Family name is required",
-  userNameInvalid: "Not a recognised name string",
-  emailReqd: "A valid email is required",
-  pwdRequired: "A password is required",
-  pwdInvalid: "Your password must be 6 characters or more",
-  pwdConfirm: "Password confirmation is required!",
-  pwdNotSame: "Passwords do not match!",
-  dateInvalid: "A valid date is required"
-};
-// --------------------------- [I18N stuff] ---------------------------
-
-// Regex for this locale
-const reUsername = new XRegExp(accountTypeLocale.regex);
 
 // Default language
 const defaultLocaleOption = localeTags[0].items[0];
@@ -250,11 +101,9 @@ const inpValues = {
   accountType: defaultLocaleOption,
   userPrefLang: accountTypeLocale.locale
 };
+// --------------------------- [Init and defaults end] -----------------------
 
-// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
-Modal.setAppElement("#registration");
-
-// --------------------------- [Validation] ---------------------------
+// --------------------------- [Validation] ----------------------------------
 const validUserAcctSchema = yup.object().shape({
   familyname: yup
     .string()
@@ -274,41 +123,46 @@ const validUserAcctSchema = yup.object().shape({
   //   new Date("January 1, 2000 00:00:00");
   //})
 });
-// --------------------------- [Validation] ---------------------------
+// --------------------------- [Validation end] ------------------------------
 
+// Regex username check for this locale
+const reUsername = new XRegExp(accountTypeLocale.regex);
+
+// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
+Modal.setAppElement("#registration");
+
+//
+//
 //... ===========================================================================
 //...     M A I N
 //... ===========================================================================
 class RegistrationApp extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      showModal: false,
-      date: new Date(),
+  state = {
+    showModal: false,
+    date: new Date(),
+    localeLocn: {
       localeChosen: "en-US",
-      location: { longitude: 0.0, latitude: 0.0 }
-    };
-
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
-    //this.handleLocaleChoice = this.handleLocaleChoice.bind(this);
-  }
-
-  getLatLon = newLocation => {
-    this.setState({ location: newLocation });
-  };
-  getLocale = newLocale => {
-    this.setState({ locale: newLocale });
+      location: { latitude: 0.0, longitude: 0.0 }
+    }
   };
 
   // Modal stuff
-  handleOpenModal() {
+  handleOpenModal = () => {
     this.setState({ showModal: true });
-  }
+  };
 
-  handleCloseModal() {
+  handleCloseModal = () => {
     this.setState({ showModal: false });
-  }
+  };
+
+  // Location & locale
+  getCurrLocation = newLocation => {
+    this.setState({ localeLocn: { location: newLocation } });
+  };
+
+  getLocale = newLocale => {
+    this.setState({ localeLocn: { localeChosen: newLocale } });
+  };
 
   // Language/locale stuff
   handleLocaleChoice(option) {
@@ -317,11 +171,46 @@ class RegistrationApp extends React.Component {
   }
 
   // Dates stuff
-  handleDoB() {}
+  handleDoB = (field, value, setFieldValue) => {
+    setFieldValue(field, value);
+    // console.log("DoB: ", value);
+  };
 
-  // Doesn't update the state...
-  componentWillReceiveProps() {
-    <GetLatLon getLatLon={this.getLatLon} />;
+  // Wait for browser to do its stuff...
+  componentDidMount() {
+    //... Load I18N strings in TopLevelApp
+
+    // *** This will be part of the cookie/geolocn function
+    // Check we can geolocate
+    if (!navigator.geolocation) {
+      alert(errorMsgs.geolocFail);
+      return;
+    }
+
+    // Get locale stuff, get current location (on request)
+    //... Get the curr posn. [Default timeout is infinity!  maxAge, where you were last (mobile)]
+    // Nota Bene: Read cookie first
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          localeLocn: {
+            location: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            }
+          }
+        });
+        console.log("1..> %o", this.state);
+      },
+      error => {
+        /// Should warn user
+        console.warn(`ERROR(${error.code}): ${error.message}`);
+      },
+      {
+        maximumAge: 10000,
+        timeout: 5000
+      }
+    );
   }
 
   //... Ok, let's get on with it
@@ -329,6 +218,7 @@ class RegistrationApp extends React.Component {
     return (
       <div>
         <style jsx="true">{button}</style>
+        {/* Logo - to go... */}
         <div
           style={{
             height: 55,
@@ -347,6 +237,7 @@ class RegistrationApp extends React.Component {
           Trigger Modal
         </button>
 
+        {/* Here's where things really start... */}
         <Modal
           isOpen={this.state.showModal}
           style={customModalStyles}
@@ -368,7 +259,7 @@ class RegistrationApp extends React.Component {
             initialValues={inpValues}
             // Validation
             validationSchema={validUserAcctSchema}
-            //... 'Submit' and fake server delay
+            //... 'Submit' and fake server delay [zeroMQ]
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
@@ -378,7 +269,13 @@ class RegistrationApp extends React.Component {
               this.handleCloseModal;
             }}
           >
-            {({ values, errors, isSubmitting, handleSubmit }) => (
+            {({
+              values,
+              errors,
+              isSubmitting,
+              handleSubmit,
+              setFieldValue
+            }) => (
               <Form onSubmit={handleSubmit}>
                 <table style={{ marginBottom: 4 }}>
                   <thead>
@@ -395,7 +292,7 @@ class RegistrationApp extends React.Component {
                     <tr>
                       <td style={{ width: 300 }}>
                         <Field
-                          style={fieldStyle1}
+                          style={fieldStyle}
                           type="input"
                           name="familyname"
                           placeholder={inpValuesI18N.familyname}
@@ -429,29 +326,6 @@ class RegistrationApp extends React.Component {
                           placeholder={inpValuesI18N.password2}
                         />
                         <ErrorMessage name="password2" component="div" />
-                        <DatetimeComp
-                          name="dob"
-                          dtId="dtDob"
-                          style={fieldStyle}
-                          datetimeFormat="YYYY-MM-DD HH:MM"
-                          placeholder={inpValuesI18N.dob}
-                        />
-                        <LocationComp
-                          style={fieldStyle}
-                          type="input"
-                          name="birthLocation"
-                          lat={this.state.location.latitude}
-                          lon={this.state.location.longitude}
-                          placeholder={inpValuesI18N.lob}
-                        />
-                        <LocationComp
-                          style={fieldStyle}
-                          type="input"
-                          name="currLocation"
-                          lat={this.state.location.latitude}
-                          lon={this.state.location.longitude}
-                          placeholder={inpValuesI18N.locn}
-                        />
                         <section
                           style={{ height: 15, marginBottom: 1, fontSize: 12 }}
                         >
@@ -505,7 +379,11 @@ class RegistrationApp extends React.Component {
                                         accountTypeLocale.format
                                       ).format(accountTypeList[index].price) +
                                         " " +
-                                        accountTypeLocale.perMonth}
+                                        accountTypeLocale.perMonth +
+                                        " " +
+                                        (accountTypeList[index].perUser
+                                          ? accountTypeLocale.perUser
+                                          : "")}
                                     </label>
                                   </section>
                                 ))}
@@ -592,7 +470,7 @@ class RegistrationApp extends React.Component {
             background: #90ee90;
           }
           .radiobutton {
-            height: 25px;
+            height: 30px;
             width: 95%;
             font-size: 12px;
             border: 1px solid darkgrey;

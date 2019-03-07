@@ -1,0 +1,474 @@
+//-------------------------------
+//  STYLED COMPONENTS (GENERAL)
+//-------------------------------
+import React from "react";
+
+// const Template = ({ children }) => {
+//   return (
+//     <tag>
+//       {children}
+//       <style jsx>{`
+//         tag {
+//         }
+//       `}</style>
+//       <style jsx>{``}</style>
+//     </tag>
+//   );
+// };
+
+//-------------------------------------
+//        GENERAL
+//-------------------------------------
+const Button2 = ({ children, type }) => {
+  return (
+    <button>
+      {children}
+      <style jsx>
+        {`
+          button {
+            width: 90px;
+            height: 95%;
+            border-radius: 2px;
+            color: black;
+            border: 1px solid black;
+            margin-top: 5px;
+            margin-right: 9px;
+            outline: none;
+          }
+          button:hover {
+            background-color: #bbdefb;
+            border-color: darkBlue;
+          }
+        `}
+      </style>
+      <style jsx="true">{`
+        button {
+          background: ${type === "notifications" ? "lightblue" : "#8aacc8"};
+        }
+      `}</style>
+    </button>
+  );
+};
+
+const Button = ({ children }) => {
+  return (
+    <button>
+      {children}
+      <style jsx>{`
+        button {
+          width: 90px;
+          height: 95%;
+          border-radius: 2px;
+          color: black;
+          font-size: 14px;
+          border: 1px solid black;
+          margin-top: 7px;
+          margin-right: 4px;
+          outline: none;
+        }
+        button:hover {
+          backgroundcolor: "#bbdefb";
+          bordercolor: "darkBlue";
+        }
+      `}</style>
+    </button>
+  );
+};
+
+// ,
+// ({ type }) => {
+//         switch (type) {
+//           default:
+//       return {
+//             background: "lightblue";
+//           }
+//           case "account":
+//       return {
+//             background: "#8aacc8";
+//           }
+//           case "settings":
+//       return {
+//             background: "#af8eb5";
+//           }
+//           case "qna":
+//       return {
+//             background: "#af8eb5";
+//           }
+//         }
+//       }
+
+// ,
+// ({ type }) => {
+//         switch (type) {
+//           default:
+//       return {
+//             background: "lightblue";
+//           }
+//           case "notifications":
+//       return {
+//             background: "#8aacc8";
+//           }
+//         }
+//       }
+
+const Input = props => {
+  return (
+    <>
+      <input {...props} />
+      <style jsx>{`
+        input {
+          width: 250px;
+          height: 25px;
+          margin-top: 3px;
+          box-sizing: border-box;
+          color: black;
+        }
+      `}</style>
+    </>
+  );
+};
+
+const Label = ({ children }) => {
+  return (
+    <label>
+      {children}
+      <style jsx>{`
+        label {
+          position: absolute;
+        }
+      `}</style>
+    </label>
+  );
+};
+
+//----------------------------------
+//  STYLED COMPONENTS (USER STATE)
+//----------------------------------
+
+//----------------------------------
+//        USER STATE
+//----------------------------------
+const AccountGrid = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          padding: 2px;
+          background-color: #fff;
+          font-family: Arial;
+          font-size: 14px;
+          color: #444;
+          width: 680px;
+          height: 55px;
+          border: 1px solid black;
+          display: grid;
+          grid-column-gap: 3px;
+          grid-template-columns: 420px 200px;
+          grid-template-rows: 25px 25px;
+          grid-template-areas:
+            "row1 inout"
+            "row2 search";
+        }
+      `}</style>
+    </section>
+  );
+};
+
+// @supports (display: grid):  {
+//     display: grid;
+//     grid-column-gap: 3px;
+//     grid-template-columns: 420px 200px;
+//     grid-template-rows: 25px 25px;
+//     grid-template-areas:
+//       "row1 inout"
+//       "row2 search";
+//   }
+
+const AccountDetail = ({ children }) => {
+  // Make bottom border a gradient...
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          grid-area: "row1";
+          height: 25px;
+          line-height: 22px;
+          border-bottom: 1px solid darkgrey;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const InOutLocale = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          grid-area: "inout";
+          margin-left: auto;
+          margin-right: 0;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const InOut = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          display: inline-block;
+          margin: auto 0 auto 5px;
+          height: 23px;
+          padding: 2px;
+          border: 1px solid darkgrey;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const Locale = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          display: inline-block;
+          height: 23px;
+          padding: 2px;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const Buttons = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          grid-area: "row2";
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const Search = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          grid-area: "search";
+          margin-top: 3px;
+          height: 100%;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const Account = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          display: inline-block;
+          height: 90%;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const Settings = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          display: inline-block;
+          height: 90%;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const QandA = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          display: inline-block;
+          height: 90%;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const Notifications = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          position: relative;
+          display: inline-block;
+          height: 90%;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const NotifyCount = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background: #f44336;
+          border: 1px solid black;
+          padding-left: 2px;
+          padding-bottom: 2px;
+          width: 14px;
+          height: 14px;
+          margin: 0;
+          font-size: 11px;
+          border-radius: 50%;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+const ButtonWithCount = ({ children }) => {
+  return (
+    <button>
+      {children}
+      <style jsx>{`
+        button {
+          width: 99px;
+          height: 95%;
+          border-radius: 2px;
+          color: black;
+          font-size: 14px;
+          border: 1px solid black;
+          margin-top: 5px;
+          margin-right: 9px;
+          outline: none;
+        }
+        button:hover {
+          background-color: #bbdefb;
+          border-color: darkBlue;
+        }
+      `}</style>
+    </button>
+  );
+};
+
+//-------------------------------------
+//        LOGIN (REGISTER)
+//-------------------------------------
+const LogRegGrid = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          padding: 2px;
+          background-color: #fff;
+          font-family: Arial;
+          font-size: 14px;
+          color: #444;
+          width: 525px;
+          height: 55px;
+          border: 1px solid black;
+          display: grid;
+          grid-column-gap: 3px;
+          grid-template-columns: 250px 100px 100px;
+          grid-template-rows: 25px 25px;
+          grid-template-areas:
+            "email login register"
+            "pwd . .";
+        }
+      `}</style>
+    </section>
+  );
+};
+
+// The `withStyles()` higher-order component is injecting a `classes`
+// property that is used by the `Button` component.
+const AstroButton = ({ children }) => {
+  return (
+    <button>
+      {children}
+      <style jsx>{`
+         {
+          background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+          border-radius: 3px;
+          border: 0;
+          color: white;
+          height: 48px;
+          full-width: true;
+          padding: 0 30px;
+          box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+        }
+      `}</style>
+    </button>
+  );
+};
+
+const AstroGrid = () => {
+  return (
+    <section>
+      <style jsx>{`
+        section {
+          border: "1px solid red";
+        }
+      `}</style>
+    </section>
+  );
+};
+
+//-------------------------------------
+//        EXPORT
+//-------------------------------------
+export {
+  AccountGrid,
+  AccountDetail,
+  InOutLocale,
+  InOut,
+  Locale,
+  Buttons,
+  Search,
+  Account,
+  Settings,
+  QandA,
+  Notifications,
+  NotifyCount,
+  Button,
+  Button2,
+  ButtonWithCount,
+  Input,
+  Label,
+  LogRegGrid,
+  AstroButton,
+  AstroGrid
+};

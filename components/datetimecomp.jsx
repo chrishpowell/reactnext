@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
-// Moment stuff
-import moment from "moment";
-// Set the locale/lang (mixed up in moment)
+// Set the locale/lang
 import "moment/locale/fr";
 import "moment/locale/zh-cn";
 
@@ -79,7 +77,6 @@ class DatetimeComp extends React.Component {
 
 DatetimeComp.propTypes = {
   field: PropTypes.string.isRequired,
-  locale: PropTypes.string.isrequired,
   input: PropTypes.shape({
     initValue: PropTypes.instanceOf(Date),
     onChange: PropTypes.func.isRequired, // setFieldValue
