@@ -1,0 +1,54 @@
+//------------------------------------
+//     GRID TEST
+//------------------------------------
+// NB: Doesn't work as expected!
+export const GridTest = ({ children }) => {
+  return (
+    <section>
+      {children}
+      <style jsx>{`
+        section {
+          padding: 0;
+          background-color: lightgreen;
+          font-family: Arial;
+          font-size: 14px;
+          color: #444;
+          grid:
+            "a a a"
+            "b c d";
+        }
+        #head {
+          flow: a;
+        }
+        #nav {
+          flow: b;
+        }
+        #adv {
+          flow: c;
+        }
+        #body {
+          flow: d;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const TestGrid = () => {
+  return (
+    <>
+      <span id="head" style={{ border: "1px solid red" }}>
+        Head
+      </span>
+      <span id="nav" style={{ border: "1px solid green" }}>
+        Nav
+      </span>
+      <span id="adv" style={{ border: "1px solid blue" }}>
+        Adv
+      </span>
+      <span id="body" style={{ border: "1px solid black" }}>
+        Body
+      </span>
+    </>
+  );
+};

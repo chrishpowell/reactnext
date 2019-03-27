@@ -6,8 +6,18 @@ module.exports = withCSS(
     webpack: config => {
       // Fixes npm packages that depend on `fs` module & errors with maxmind etc.etc. (No idea why this is needed...)
       config.node = {
-        fs: "empty"
+        fs: "empty",
+        net: "empty",
+        zmq: "empty"
       };
+
+      config.module.rules.push({
+        test: /\.properties$/,
+        use: {
+          loader: "file-loader",
+          options: {}
+        }
+      });
 
       return config;
     },

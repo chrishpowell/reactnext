@@ -8,92 +8,59 @@ import React from "react";
 //---------------------------------------
 //
 // - Grid
-export const PrediktGrid1 = ({ children }) => {
+export const PrediktHomeGrid = ({ children }) => {
   return (
     <section>
       {children}
       <style jsx>{`
         section {
-          padding: 2px;
-          background-color: #fff;
-          font-family: Arial;
-          font-size: 14px;
-          color: #444;
-          border: 1px solid black;
+          font-size: 15px;
           display: grid;
-          grid-column-gap: 2px;
-          grid-template-columns: 30px 1fr 1fr 150px;
-          grid-template-rows: 1fr 1fr 1fr 1fr;
+          grid-column-gap: 0;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
           grid-template-areas:
-            "logo1 logo1 loginreg loginreg"
-            "lleft navbar navbar bigdate"
-            "lleft pcontent pcontent bigdate"
-            "footer footer footer footer";
+            "pcontent1a pcontent1b pcontent1c bigdate"
+            "pcontent2a pcontent2b pcontent2c bigdate";
         }
       `}</style>
     </section>
   );
 };
 
-export const LogoCell = props => {
+export const ContentCellA = props => {
   return (
     <section style={props.style}>
       {props.children}
       <style jsx>{`
         section {
-          grid-area: logo1;
+          grid-area: pcontent1a pcontent2a;
         }
       `}</style>
     </section>
   );
 };
 
-export const LoginRegCell = props => {
+export const ContentCellB = props => {
   return (
     <section style={props.style}>
       {props.children}
       <style jsx>{`
         section {
-          grid-area: loginreg;
+          grid-area: pcontent1b pcontent2b;
         }
       `}</style>
     </section>
   );
 };
 
-export const NavbarCell = props => {
+export const ContentCellC = props => {
   return (
     <section style={props.style}>
       {props.children}
       <style jsx>{`
         section {
-          grid-area: navbar;
-        }
-      `}</style>
-    </section>
-  );
-};
-
-export const ContentCell = props => {
-  return (
-    <section style={props.style}>
-      {props.children}
-      <style jsx>{`
-        section {
-          grid-area: pcontent;
-        }
-      `}</style>
-    </section>
-  );
-};
-
-export const LeftCell = props => {
-  return (
-    <section style={props.style}>
-      {props.children}
-      <style jsx>{`
-        section {
-          grid-area: lleft;
+          grid-area: pcontent1c pcontent2c;
         }
       `}</style>
     </section>
@@ -113,46 +80,124 @@ export const BigDateCell = props => {
   );
 };
 
-export const FooterCell = props => {
+//
+//---------------------------------------
+//          HOME PAGE
+//---------------------------------------
+//
+// - Grid
+export const PrediktBaseGrid = ({ children }) => {
   return (
-    <section style={props.style}>
-      {props.children}
+    <section>
+      {children}
       <style jsx>{`
         section {
-          grid-area: footer;
+          padding: 0;
+          background-color: #fff;
+          font-family: Arial;
+          font-size: 14px;
+          color: #444;
+          display: grid;
+          grid-column-gap: 0;
+          grid-row-gap: 15px;
+          grid-template-columns: 30px 20px 1fr 1fr 1fr 1fr 220px;
+          grid-template-rows: 80px 1fr 1fr 1fr;
+          grid-template-areas:
+            ". logo logo nav nav loginnstate loginnstate"
+            "lleft rleft pcontent pcontent pcontent pcontent pcontent"
+            "lleft rleft pcontent pcontent pcontent pcontent pcontent"
+            ". . footer footer footer footer footer";
         }
       `}</style>
     </section>
   );
 };
 
-//
-//---------------------------------------
-//          OTHER PAGES
-//---------------------------------------
-//
-// - Grid
-export const PrediktGrid2 = ({ children }) => {
+export const LeftBaseCell = props => {
   return (
-    <section>
-      {children}
+    <section style={props.style}>
+      {props.children}
       <style jsx>{`
         section {
-          padding: 2px;
-          background-color: #fff;
-          font-family: Arial;
-          font-size: 14px;
-          color: #444;
-          border: 1px solid black;
-          display: grid;
-          grid-column-gap: 3px;
-          grid-template-columns: 30px 1fr 1fr 150px;
-          grid-template-rows: 1fr 1fr 1fr 1fr;
-          grid-template-areas:
-            "left logo2 loginreg right"
-            "left navbar navbar right"
-            "left . . right"
-            "footer footer footer footer";
+          grid-area: lleft;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const RLeftBaseCell = props => {
+  return (
+    <section style={props.style}>
+      {props.children}
+      <style jsx>{`
+        section {
+          grid-area: rleft;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const LogoBaseCell = props => {
+  return (
+    <section style={props.style}>
+      {props.children}
+      <style jsx>{`
+        section {
+          grid-area: logo;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const NavBaseCell = props => {
+  return (
+    <section style={props.style}>
+      {props.children}
+      <style jsx>{`
+        section {
+          grid-area: nav;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const LoginNStateBaseCell = props => {
+  return (
+    <section style={props.style}>
+      {props.children}
+      <style jsx>{`
+        section {
+          grid-area: loginnstate;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const ContentBaseCell = props => {
+  return (
+    <section style={props.style}>
+      {props.children}
+      <style jsx>{`
+        section {
+          grid-area: pcontent;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export const FooterBaseCell = props => {
+  return (
+    <section style={props.style}>
+      {props.children}
+      <style jsx>{`
+        section {
+          grid-area: footer;
         }
       `}</style>
     </section>

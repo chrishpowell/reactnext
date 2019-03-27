@@ -1,0 +1,24 @@
+//---------------------------------------
+//         REG APP CALL TEST
+//---------------------------------------
+import React, { Component } from "react";
+import RegistrationApp from "./register";
+
+class ParentToReg extends Component {
+  child = React.createRef();
+
+  fireReg = () => {
+    this.child.current.handleOpenModal();
+  };
+
+  render() {
+    return (
+      <div id="registration">
+        <RegistrationApp ref={this.child} />
+        <button onClick={this.fireReg}>Register</button>
+      </div>
+    );
+  }
+}
+
+export default ParentToReg;

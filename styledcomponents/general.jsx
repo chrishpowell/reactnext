@@ -61,20 +61,20 @@ export const Button = ({ children, type }) => {
 
 //          box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
 // - Big Buttons
-export const BigButton = ({ children, type }) => {
+export const BigButton = ({ children, type, onClick }) => {
   return (
-    <button>
+    <button onClick={onClick}>
       {children}
       <style jsx>{`
         button {
           background: ${type === "login"
-            ? "linear-gradient(35deg, #2980b9 30%, #85c1e9 70%)"
+            ? "#311B92"
             : type === "register"
-            ? "linear-gradient(35deg, #ec7063 30%, #cd6155 70%)"
+            ? "#a93226"
             : "lightblue"};
           border-radius: 3px;
           border: 1px solid grey;
-          color: black;
+          color: white;
           height: 100%;
           width: 100%;
           display: block;

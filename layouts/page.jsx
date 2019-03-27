@@ -1,22 +1,19 @@
-import Meta from "../components/meta";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
+//-----------------------------------------
+//         PAGE
+//-----------------------------------------
+import { Meta } from "./meta";
+import { Footer } from "./footer";
 
 //
 //-----------------------------
 //      M A I N
 //-----------------------------
-const Page = ({ children, title = "Default title", isoCode }) => {
+export const Page = ({ children, title = "Default title", isoCode }) => {
   return (
     <>
       <Meta title={title} />
-      <Header />
-      <Navbar isoCode={isoCode} />
       {children}
       <Footer />
     </>
   );
 };
-
-export default Page;

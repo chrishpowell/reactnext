@@ -8,10 +8,10 @@ import React from "react";
 //---------------------------------------
 //
 // - Grid
-export const LogRegGrid = ({ children }) => {
+export const LogRegGrid = props => {
   return (
-    <section>
-      {children}
+    <section style={props.style}>
+      {props.children}
       <style jsx>{`
         section {
           padding: 2px;
@@ -19,9 +19,6 @@ export const LogRegGrid = ({ children }) => {
           font-family: Arial;
           font-size: 14px;
           color: #444;
-          width: 455px;
-          height: 75px;
-          border: 1px solid black;
           display: grid;
           grid-column-gap: 3px;
           grid-template-columns: 250px 100px 100px;

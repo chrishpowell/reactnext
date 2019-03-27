@@ -1,0 +1,6 @@
+//--------------------------------------
+//        CHILD BUTTON
+//--------------------------------------
+export const ChildButton = ({ children, type, onClick }) => {
+  return <button onClick={onClick}>{children}</button>;
+};

@@ -1,8 +1,13 @@
-//import RegistrationApp from "../components/register";
-import { LoginBox } from "../components/loginnregisterbox";
+//------------------------------
+//       INDEX
+//------------------------------
+import { Page } from "../layouts/page";
+import { Home } from "./home";
 
-export default () => (
-  <div id="registration">
-    <LoginBox />
-  </div>
-);
+export default () => {
+  return (
+    <Page>
+      <Home />
+    </Page>
+  );
+};

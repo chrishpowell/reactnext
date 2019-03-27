@@ -1,0 +1,11 @@
+/* Tooltip CSS */
+.react-tooltip-lite {
+    background: #311B92;
+    color: white;
+    font-family: Arial;
+    font-size: 12px;
+  }
+
+  .react-tooltip-lite-arrow {
+    border-color: #311B92;
+  }

@@ -1,0 +1,23 @@
+//------------------------------------
+//        PARENT BUTTON TEST
+//------------------------------------
+import React, { Component } from "react";
+import { ChildButton } from "./childbutton";
+
+class ParentButton extends Component {
+  login = () => {
+    console.log("..> Login!");
+  };
+
+  render() {
+    return (
+      <>
+        <ChildButton type="login" onClick={() => this.login()}>
+          Login
+        </ChildButton>
+      </>
+    );
+  }
+}
+
+export default ParentButton;
