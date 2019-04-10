@@ -1,6 +1,7 @@
 // -------------------------------------
 //           TWEETS LIST
 // -------------------------------------
+import zmq from "zeromq";
 import { TweetBox } from "./tweetbox";
 
 const reqSock = zmq.socket("req");

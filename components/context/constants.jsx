@@ -15,7 +15,7 @@ const Constants = {
   defaultEmail: "example.noone@example.com",
   unknownCountry: "UN",
   unknownLangloc: "un-UN",
-  defaultLangLoc: "en-US",
+  defaultLangLoc: "en-GB",
   cookieName: "Predikt.IO",
   noIP: "0",
   cookie: {

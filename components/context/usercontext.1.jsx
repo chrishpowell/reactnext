@@ -72,7 +72,7 @@ const I18NaccountTypeLocale = {
     return accountTypeLocale;
   },
   Set: newObj => {
-    accountTypeLocale = newObj;
+    Object.assign(accountTypeLocale, newObj);
   },
   Dump: () => {
     return Object.entries(accountTypeLocale);
@@ -81,7 +81,7 @@ const I18NaccountTypeLocale = {
 
 //
 // - Registration display fields initial values
-global.regFormValues = {
+global.formValuesI18N = {
   mainTitle: "Registration",
   confMsg:
     "Note: On successfully registering, you will receive an email with a link which you select for confirmation.",
@@ -96,13 +96,13 @@ global.regFormValues = {
   buttonText: "Show map"
 };
 
-const I18NregFormValues = {
-  Message: "regFormValues",
+const I18NformValuesI18N = {
+  Message: "formValuesI18N",
   Get: () => {
     return formValuesI18N;
   },
   Set: newObj => {
-    formValuesI18N = newObj;
+    Object.assign(formValuesI18N, newObj);
   },
   Dump: () => {
     return Object.entries(formValuesI18N);
@@ -111,7 +111,7 @@ const I18NregFormValues = {
 
 //
 // - Input fields initial values
-global.regFormInputs = {
+global.inpValuesI18N = {
   familyname: "Family name...",
   othername: "Other/given names...",
   email: "Email...",
@@ -122,13 +122,13 @@ global.regFormInputs = {
   locn: "Curr locn..."
 };
 
-const I18NregFormInputs = {
-  Message: "regFormInputs",
+const I18NinpValuesI18N = {
+  Message: "inpValuesI18N",
   Get: () => {
     return inpValuesI18N;
   },
   Set: newObj => {
-    inpValuesI18N = newObj;
+    Object.assign(inpValuesI18N, newObj);
   },
   Dump: () => {
     return Object.entries(inpValuesI18N);
@@ -211,7 +211,7 @@ const I18NErrorMsgs = {
     return errorMsgs;
   },
   Set: newObj => {
-    errorMsgs = newObj;
+    Object.assign(errorMsgs, newObj);
   },
   Dump: () => {
     return Object.entries(errorMsgs);
