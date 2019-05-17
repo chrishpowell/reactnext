@@ -12,37 +12,31 @@ const zmqProps = properties.of(
   "/home/chrispowell/PrediktCommon/properties/zmq.properties"
 );
 // Messaging to BE
-import { Message } from "../components/messaging/messaging.jsx";
+const { Message } = require("./components/messaging/messaging.jsx");
 // Context (App)
-import { AppContext } from "../components/context/AppContext";
-
-// Context (I18N etc.)
-import {
-  UserContext,
-  I18NaccountTypeLocale,
-  I18NformValuesI18N,
-  I18NinpValuesI18N,
-  I18NErrorMsgs,
-  I18NaccountTypeList
-} from "../components/context/usercontext";
+const { AppContext } = require("./components/context/appcontext.jsx");
 
 // Setup the tweet socket
 const ZMQ1URL = zmqProps.get("ZMQ1URL");
+// Message type (tweets)
 const TWTCHAN = zmqProps.get("TWTCHAN");
 
 // The I18N socket
 const ZMQ2URL = zmqProps.get("ZMQ2URL");
+// Message type (I18N)
 const I18NCHAN = zmqProps.get("I18NCHAN");
 
 // Server setup
-const TPORT = zmqProps.get("TPORT");
+const EPORT = zmqProps.get("EPORT");
 const ESRV = zmqProps.get("ESRV");
 const COLON = zmqProps.get("COLON");
+// I18N Base language
+const BASELOCALE = zmqProps.get("I18NBASE");
 
 //
 // Express
 // Setup NextJS
-const app = next(true); // dev, production=false
+const app = next({ dev: true }); // dev, production=false
 const handle = app.getRequestHandler();
 const srv = express();
 
@@ -54,6 +48,10 @@ const twtSock = zmq.socket("req");
 const i18nSock = zmq.socket("req");
 
 //
+// Trap node errors... (Usually MaxListenersExceededWarning, which is because there's no remote socket connection)
+process.on("warning", e => console.warn(e.stack));
+
+//
 //---------------------------------------
 //          M A I N
 //---------------------------------------
@@ -62,47 +60,54 @@ app
   .then(() => {
     //--------------------------------------------
     // *** Express and 0MQ
-    srv.listen(TPORT, err => {
+    srv.listen(EPORT, err => {
       if (err) throw err;
-      console.log("Listening on http://%s%s%s", ESRV, COLON, TPORT);
+      console.log("Listening on http://%s%s%s", ESRV, COLON, EPORT);
     });
 
-    // Send request for tweets...  (*** I18N test ***)
-    srv.get("/socket/tweets/:locale", (req, res) => {
+    // Send request for tweets...
+    srv.get("/socket/tweets", (req, res) => {
+      console.log(
+        "@@@@@@@ Fetching tweets for FE... ctryLang curr: %s, req: %s",
+        AppContext.GetCtryLang(),
+        req.query.locale
+      );
       //
       // Do we already have the tweets?
-      if (AppContext.GetCtryLang() !== req.params.locale) {
+      if (AppContext.GetCtryLang() !== req.query.locale) {
         // Now alter message handling (NASTY... but necessary 'cos 'sock'.on is async)
         twtSock.once("message", function(data) {
           // Set tweets in app context
-          //console.log("###> ", data.toString("utf8"));
+          console.log("###> ", data.toString("utf8"));
+          AppContext.SetCtryLang(req.query.locale);
           AppContext.SetTweets(JSON.parse(data.toString("utf8")));
 
           // Send to browser
           res.send(AppContext.GetTweets());
+          console.log("From server ----> ", AppContext.GetTweets());
           res.end();
         });
 
         // Set message
         Message.SetMessageType(TWTCHAN);
-        Message.SetMessage({ ctryLang: req.params.locale });
+        Message.SetMessage({ ctryLang: req.query.locale });
         // Get tweet cache and display
         twtSock.send(JSON.stringify(Message.Get()));
         //console.log("Sending::> ", JSON.stringify(Message.Get()));
       } else {
         // Cache set in 'once' above
         res.send(AppContext.GetTweets());
+        console.log("Sending tweets *****> ", AppContext.GetTweets());
         res.end();
       }
     });
 
     // Send request for I18N stuff and then...
     // Multiple message type: mtype eg: accountTypeLocale, formValuesI18N
-    // Send request for i18n...  (*** I18N test ***)
-    srv.get("/socket/i18n/:locale", (req, res) => {
+    srv.get("/socket/i18n", (req, res) => {
       //
       // Do we already have the i18n?
-      if (AppContext.GetCtryLang() !== req.params.locale) {
+      if (AppContext.GetCtryLang() !== req.query.locale) {
         // Now alter message handling (NASTY... but necessary 'cos 'sock'.on is async)
         i18nSock.once("message", function(data) {
           // Set i18n in app context
@@ -110,15 +115,15 @@ app
           let i18nObj = JSON.parse(data.toString("utf8"));
 
           // Account types list
-          I18NaccountTypeList.Set(i18nObj.I18N.accountTypeList);
+          AppContext.SetAccountTypeList(i18nObj.I18N.accountTypeList);
           // Account type locale
-          I18NaccountTypeLocale.Set(i18nObj.I18N.accountTypeLocale);
+          AppContext.SetAccountTypeLocale(i18nObj.I18N.accountTypeLocale);
           // Reg form inp values
-          I18NinpValuesI18N.Set(i18nObj.I18N.regFormInputs);
+          AppContext.SetRegFormInputs(i18nObj.I18N.regFormInputs);
           // Reg form values
-          I18NformValuesI18N.Set(i18nObj.I18N.regFormValues);
+          AppContext.SetRefFormValues(i18nObj.I18N.regFormValues);
           // Error msgs
-          I18NErrorMsgs.Set(i18nObj.I18N.errorMsgs);
+          AppContext.SetErrorMsgs(i18nObj.I18N.errorMsgs);
 
           // Send to browser
           res.send(AppContext.GetI18NObj());
@@ -127,7 +132,7 @@ app
 
         // Set message
         Message.SetMessageType(I18NCHAN);
-        Message.SetMessage({ ctryLang: req.params.locale });
+        Message.SetMessage({ ctryLang: req.query.locale });
         // Get tweet cache and display
         i18nSock.send(JSON.stringify(Message.Get()));
         //console.log("Sending::> ", JSON.stringify(Message.Get()));
@@ -138,17 +143,9 @@ app
       }
     });
 
-    // Home Page
-    srv.get("/", (req, res) => {
-      // Home page
-
-      // Home page content
-      res.send("Hello World");
-    });
-
     // Everything else
-    server.get("*", (req, res) => {
-      console.log("Srv get.....<");
+    srv.get("*", (req, res) => {
+      console.log("Srv get.....*");
       return handle(req, res);
     });
   })
@@ -159,26 +156,49 @@ app
 //--------------------------------------------
 
 //--------------------------------------------
-// *** Connect to backend server on startup
-// Connect to remote 'tweet server' and initiate cache
+// *** Connect to backend server on startup ["en-GB" default]
 try {
-  const zmqEE = twtSock.connect(ZMQ1URL);
-  //console.log("..> connect emitter event = ", zmqEE);
+  // Connect to remote 'tweet server' and initiate cache
+  const twtEE = twtSock.connect(ZMQ1URL);
+  AppContext.SetTweetSockObj(twtSock, TWTCHAN);
+  console.log("> Tweet requester connected to: ", ZMQ1URL);
 
-  // Get tweet cache (ensure cache not empty)
-  twtSock.send(TWTCHAN);
+  // Connect to remote 'tweet server' and initiate cache
+  const i18nEE = i18nSock.connect(ZMQ2URL);
+  AppContext.SetI18NSockObj(i18nSock, I18NCHAN);
+  console.log("> I18N requester connected to: ", ZMQ2URL);
+
+  //-----------[I18N]-------------------
+  // First time round i18n cache
+  i18nSock.once("message", function(data) {
+    AppContext.SetCtryLang(BASELOCALE);
+    AppContext.SetI18NObj(JSON.parse(data.toString("utf8")));
+  });
+
+  // Get default i18n cache (ensure cache not empty)
+  Message.SetMessageType(I18NCHAN);
+  Message.SetMessage({ ctryLang: BASELOCALE });
+  //console.log("1. Sending::> ", JSON.stringify(Message.Get()));
+  i18nSock.send(JSON.stringify(Message.Get()));
+  //-----------[I18N]-------------------
+
+  //-----------[Tweets]-----------------
+  // First time round tweet cache
+  twtSock.once("message", function(data) {
+    const tweetObj = JSON.parse(data.toString("utf8"));
+    console.log(">>>>>> ", tweetObj);
+    AppContext.SetCtryLang(tweetObj.ctryLang);
+    AppContext.SetSign(tweetObj.sign);
+    AppContext.SetTweets(tweetObj.tweets);
+    console.log("GetTweetObj:.:.:> ", AppContext.GetTweetObj());
+  });
+
+  // Get default tweet cache (ensure cache not empty)
+  Message.SetMessageType(TWTCHAN);
+  Message.SetMessage({ ctryLang: BASELOCALE });
+  twtSock.send(JSON.stringify(Message.Get()));
+  //-----------[Tweets]-----------------
 } catch (err) {
-  console.log("0MQ TWT connect error: ", err);
-}
-
-// Connect to remote 'i18n server', load initial i18n objs
-try {
-  const zmqEE = i18nSock.connect(ZMQ2URL);
-  //console.log("..> connect emitter event = ", zmqEE);
-
-  // Get i18n cache (ensure cache not empty)
-  i18nSock.send(I18NCHAN);
-} catch (err) {
-  console.log("0MQ I18N connect error: ", err);
+  console.log("0MQ connect error: ", err);
 }
 //--------------------------------------------

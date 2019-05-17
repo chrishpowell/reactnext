@@ -2,8 +2,8 @@
 //           CONSTANTS
 // -------------------------------------
 // Country data
-import * as ctrydata from "countries-list/dist/data.min.json";
-import JsonFind from "json-find";
+const ctrydata = require("countries-list/dist/data.min.json");
+const JsonFind = require("json-find");
 const CData = JsonFind(ctrydata);
 
 // Maxmind
@@ -16,13 +16,14 @@ const Constants = {
   unknownCountry: "UN",
   unknownLangloc: "un-UN",
   defaultLangLoc: "en-GB",
+  defaultLang: "en",
   cookieName: "Predikt.IO",
   noIP: "0",
   cookie: {
     path: "/",
     sameSite: "strict",
     expires: new Date("2038-01-01"),
-    domain: "localhost" // Will be Predikt.IO
+    domain: "localhost" // Will be Predikt.IO  **** Make localStorage, not cookie
   },
   defCtryDetails: {
     isoCode: "UN",
@@ -37,7 +38,10 @@ const Constants = {
       emoji: "",
       emojiU: ""
     }
-  }
+  },
+  LOCALE: "LOCALE",
+  TWEET: "TWEET",
+  CTRYLANG: "CTRYLANG"
 };
 
-export { Constants, CData, MaxMindDb };
+module.exports = { Constants, CData, MaxMindDb };

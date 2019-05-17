@@ -1,0 +1,58 @@
+//-----------------------------------
+//          USER/Browser CONTEXT
+//-----------------------------------
+import { createContext, useState } from "react";
+// import fetch from "isomorphic-unfetch";
+// Constants
+import { Constants } from "../constants/constants";
+// App context
+import { ctxt, AppContext } from "./appcontext1";
+// The context
+const BrsContext = createContext({});
+const BrsConsumer = BrsContext.Consumer;
+
+//
+// Set state and fetch into AppContext (via server)
+const setContext = action => {
+  switch (action.type) {
+    case Constants.LOCALE:
+      AppContext.SetCtryLang(action.locale);
+      AppContext.SetTestObj({ test1: "arglebargel", test2: "uniwunieuw" });
+      console.log("....> ", action.type);
+      return null;
+    case Constants.TWEET:
+      // AppContext.SetTestObj({ test1: "test1", test2: "test2" });
+      console.log(".....> ", action.type);
+      return {
+        tweetstamp: Date.now()
+      };
+  }
+};
+
+//
+// Provider (tweetstamp will not work with IE<v9)
+const BrsProvider = props => {
+  const context = {
+    setLocale: loc => {
+      setContext({
+        type: Constants.LOCALE,
+        locale: loc
+      }),
+        () => {
+          localStorage.setItem("locale", loc);
+        };
+    },
+    setTweets: loc => {
+      setContext({ type: Constants.TWEET, locale: loc }),
+        () => {
+          localStorage.setItem("locale", loc);
+        };
+    }
+  };
+
+  return (
+    <BrsContext.Provider value={context}>{props.children}</BrsContext.Provider>
+  );
+};
+
+export { BrsContext, BrsProvider, BrsConsumer };

@@ -1,24 +1,7 @@
 // -------------------------------------
 //           HOME PAGE
 // -------------------------------------
-import React from "react";
-
 import * as Grid from "../layouts/prediktgrids";
-// import {
-//   PrediktBaseGrid,
-//   PrediktHomeGrid,
-//   LeftBaseCell,
-//   RLeftBaseCell,
-//   LogoBaseCell,
-//   NavBaseCell,
-//   LoginNStateBaseCell,
-//   ContentBaseCell,
-//   FooterBaseCell,
-//   ContentCellA,
-//   ContentCellB,
-//   ContentCellC,
-//   BigDateCell
-// } from "../layouts/prediktgrids";
 import { TopLogo } from "../components/home/toplogo";
 import { BigDate } from "../components/home/bigdate";
 import { LoginBox } from "../components/loginregister/loginnregisterbox";

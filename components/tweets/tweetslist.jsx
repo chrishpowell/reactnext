@@ -2,34 +2,24 @@
 //           TWEETS LIST
 // -------------------------------------
 import { TweetBox } from "./tweetbox";
-
-const reqSock = zmq.socket("req");
-const ZMQ1URL = "tcp://127.0.0.1:8777";
-const TWTCHAN = "HoroTweets";
-let tweetObj = { sign: "", tweets: [] };
+// Context (App)
+import { useContext } from "react";
+import { BrsContext } from "../context/brscontext";
 
 //
 // - MAIN
 export const TweetsList = () => {
-  const { sign, tweets } = tweetObj;
-
-  reqSock.on("message", data => {
-    let horoTweets = data.toString("utf8");
-    tweetObj = JSON.parse(horoTweets);
-  });
-
-  reqSock.connect(ZMQ1URL);
-  reqSock.send(TWTCHAN);
+  const context = useContext(BrsContext);
 
   return (
-    <>
-      {tweets.map(twit => (
-        <ul>
+    <div>
+      <ul style={{ listStyleType: "none" }}>
+        {context.getTweets(context.getCtryLang()).map(twit => (
           <li key={twit.acct}>
             <TweetBox acct={twit.acct} tweet={twit.tweet} />
           </li>
-        </ul>
-      ))}
-    </>
+        ))}
+      </ul>
+    </div>
   );
 };

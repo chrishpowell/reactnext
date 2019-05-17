@@ -1,0 +1,15 @@
+//------------------------------
+//       INDEX
+//------------------------------
+// Layout and start
+import { Home } from "./home1";
+
+//
+//---------------------------
+//      M A I N
+//---------------------------
+const Index = () => {
+  return <Home />;
+};
+
+export default Index;

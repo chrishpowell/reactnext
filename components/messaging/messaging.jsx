@@ -4,8 +4,8 @@
 
 // Message
 global.prediktMsg = {
-  msgType: "msgType",
-  message: {}
+  msgType: "msgType-eg:Tweets",
+  message: { ctryLang: "locale-eg:un-UN" }
 };
 
 //
@@ -31,4 +31,4 @@ const Message = {
   }
 };
 
-module.exports = Message;
+module.exports = { Message };

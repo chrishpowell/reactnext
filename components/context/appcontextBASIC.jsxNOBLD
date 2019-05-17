@@ -1,0 +1,33 @@
+//-----------------------------------
+//          APP CONTEXT
+//-----------------------------------
+const { getGlobal, setGlobal } = require("reactn");
+
+//
+// - App context (initial)
+const ctxt = {
+  ctryLang: "un-UN",
+  testObj: { test1: "", test2: "" }
+};
+
+//
+// - Manipulate app context
+const AppContext = {
+  InitCtxt: () => {
+    setGlobal(ctxt);
+  },
+  GetCtryLang: () => {
+    return getGlobal().ctryLang;
+  },
+  SetCtryLang: newCtryLang => {
+    setGlobal({ ctryLang: newCtryLang });
+  },
+  GetTestObj: () => {
+    return getGlobal().testObj;
+  },
+  SetTestObj: newTestObj => {
+    setGlobal({ testObj: newTestObj });
+  }
+};
+
+export { AppContext };

@@ -5,7 +5,8 @@
 export const TweetBox = props => {
   return (
     <div className="bubble" style={props.style}>
-      {props.children}
+      <p style={{ fontWeight: "bold" }}>{props.acct}</p>
+      <p>{props.tweet}</p>
       <div className="bubble-arrow" />
       <style jsx>{`
         .bubble {

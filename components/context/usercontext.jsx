@@ -1,14 +1,8 @@
 // -------------------------------------
 //           USER CONTEXT
 // -------------------------------------
-//import React from "react";
+const { getGlobal, setGlobal, useGlobal } = require("reactn");
 import { Constants } from "./constants";
-
-//
-// - React context (not used at moment)... Redux?
-// const userSession = React.createContext({});
-// export const UserCtxProvider = userSession.Provider;
-// export const UserCtxConsumer = userSession.Consumer;
 
 // --------------------------- [User context] ---------------------------
 // - User context initial
