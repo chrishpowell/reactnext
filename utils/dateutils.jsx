@@ -6,7 +6,7 @@
 Date.prototype.getMonthName = function(lang) {
   // Default language is English
   lang = lang || "en-GB";
-  return this.toLocaleString(lang, { month: "long" });
+  return this.toLocaleString("fr-FR", { month: "long" });
 };
 
 //

@@ -8,7 +8,7 @@ import { LoginBox } from "../components/loginregister/loginnregisterbox";
 import { Nav } from "../components/navigation/nav";
 import { TweetsList } from "../components/tweets/tweetslist";
 
-let lang = "";
+const ctryLang = "fr-FR";
 
 //
 //------------------------------
@@ -83,7 +83,7 @@ export const Home = () => {
             />
             <div style={{ background: "#f4f6f6", borderRadius: 2 }}>
               <span
-                style={{ color: "#311B92", fontWeight: "bold", fontSize: 16 }}
+                style={{ color: "#311B92", fontWeight: "bold", fontSize: 22 }}
               >
                 Predikt.io
               </span>{" "}
@@ -126,10 +126,10 @@ export const Home = () => {
             </p>
           </Grid.ContentCellB>
           <Grid.ContentCellC style={{ marginTop: 20 }}>
-            <TweetsList />
+            <TweetsList loc={ctryLang} />
           </Grid.ContentCellC>
           <Grid.BigDateCell>
-            <BigDate lang={lang} />
+            <BigDate lang={ctryLang} />
           </Grid.BigDateCell>
         </Grid.PrediktHomeGrid>
       </Grid.ContentBaseCell>

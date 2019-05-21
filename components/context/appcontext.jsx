@@ -147,7 +147,8 @@ const AppContext = {
     return ctxt.tweetObj.tweets;
   },
   SetTweets: newTweets => {
-    ctxt.tweetObj.tweets = newTweets;
+    ctxt.tweetObj.tweets = newTweets.tweets;
+    return newTweets;
   },
   GetSign: () => {
     return ctxt.tweetObj.sign;
@@ -160,6 +161,7 @@ const AppContext = {
   },
   SetI18NObj: newI18nObj => {
     ctxt.i18nObj = newI18nObj;
+    return newI18nObj;
   },
   GetAccountTypeLocale: () => {
     return ctxt.i18nObj.accountTypeLocale;
@@ -219,4 +221,4 @@ const AppContext = {
   }
 };
 
-module.exports = { AppContext };
+module.exports = { ctxt, AppContext };

@@ -78,7 +78,6 @@ app
         // Now alter message handling (NASTY... but necessary 'cos 'sock'.on is async)
         twtSock.once("message", function(data) {
           // Set tweets in app context
-          console.log("###> ", data.toString("utf8"));
           AppContext.SetCtryLang(req.query.locale);
           AppContext.SetTweets(JSON.parse(data.toString("utf8")));
 
@@ -111,7 +110,6 @@ app
         // Now alter message handling (NASTY... but necessary 'cos 'sock'.on is async)
         i18nSock.once("message", function(data) {
           // Set i18n in app context
-          console.log("###> ", data.toString("utf8"));
           let i18nObj = JSON.parse(data.toString("utf8"));
 
           // Account types list

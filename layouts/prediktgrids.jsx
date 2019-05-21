@@ -17,7 +17,7 @@ export const PrediktHomeGrid = ({ children }) => {
           font-size: 15px;
           display: grid;
           grid-column-gap: 0;
-          grid-template-columns: 1fr 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr minmax(300px, 1fr) 1fr;
           grid-template-rows: 1fr 1fr;
           grid-template-areas:
             "pcontent1a pcontent1b pcontent1c bigdate"

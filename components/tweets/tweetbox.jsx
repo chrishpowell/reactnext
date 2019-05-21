@@ -16,7 +16,7 @@ export const TweetBox = props => {
           border-radius: 4px;
           -webkit-box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
           box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
-          font-size: 12px;
+          font-size: 11px;
           color: #311b92;
           line-height: 1.3;
           margin: 0 auto 40px 30px;
@@ -25,7 +25,7 @@ export const TweetBox = props => {
           position: relative;
         }
         .bubble p {
-          margin: 10px;
+          margin: 5px;
         }
         .bubble p:last-of-type {
           margin-bottom: 0;
